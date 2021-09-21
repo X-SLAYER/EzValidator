@@ -4,7 +4,6 @@ import 'form_validator_locale.dart';
 import 'local.dart';
 
 typedef StringValidationCallback = String? Function(String? value);
-
 typedef Action<T> = Function(T builder);
 
 class EzValidator {
@@ -22,20 +21,12 @@ class EzValidator {
   final FormValidatorLocale _locale;
   final List<StringValidationCallback> validations = [];
 
-  EzValidator reset() {
-    validations.clear();
-    if (optional != true) {
-      required(requiredMessage);
-    }
-    return this;
-  }
-
   EzValidator _add(StringValidationCallback validator) {
     validations.add(validator);
     return this;
   }
 
-  String? test(String? value) {
+  String? _test(String? value) {
     for (var validate in validations) {
       if (optional && (value == null || value.isEmpty)) {
         return null;
@@ -49,7 +40,7 @@ class EzValidator {
     return null;
   }
 
-  StringValidationCallback build() => test;
+  StringValidationCallback build() => _test;
 
   EzValidator required([String? message]) => _add(
       (v) => v == null || v.isEmpty ? message ?? _locale.required() : null);
@@ -105,9 +96,11 @@ class EzValidator {
   EzValidator oneOf(List<String?> items, [String? message]) => _add((v) =>
       items.contains(v) ? null : message ?? _locale.oneOf(items, v as String));
 
-  EzValidator notOneOf(List<String?> items, [String? message]) => _add((v) =>
-      !items.contains(v) ? null : message ?? _locale.oneOf(items, v as String));
+  EzValidator notOneOf(List<String?> items, [String? message]) =>
+      _add((v) => !items.contains(v)
+          ? null
+          : message ?? _locale.notOneOf(items, v as String));
 
-  EzValidator defaultTest(String message, bool Function(String?) test) =>
+  EzValidator defaultTest(String message, bool Function(String? v) test) =>
       _add((v) => test(v) ? null : message);
 }

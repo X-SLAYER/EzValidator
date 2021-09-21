@@ -2,7 +2,7 @@ import 'package:ez_validator/main.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,16 +34,27 @@ class _MyHomePageState extends State<MyHomePage> {
     "email": EzValidator().email().required().build(),
     "password": EzValidator().required().minLength(6).build(),
     "options": EzValidator().notOneOf(['A', 'B']).build(),
-  });
+    "age": EzValidator()
+        .required()
+        .defaultTest(
+            'Test not valid please recheck', (v) => int.parse(v as String) > 18)
+        .build()
+  }, identicalKeys: true);
 
   validate() {
-    Map<String, String> errors = mySchema.validateSync({
-      "email": 'iheb@pixelium.tn',
-      "password": '123',
-      "options": 'A',
-    });
-    // ignore: avoid_print
-    print(errors);
+    try {
+      Map<String, String> errors = mySchema.validateSync({
+        "email": 'iheb@pixelium.tn',
+        "password": '787898989898',
+        "options": 'D',
+        "age": "29"
+      });
+      // ignore: avoid_print
+      print(errors);
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
   }
 
   @override
@@ -59,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FloatingActionButton(
               onPressed: () => validate(),
               tooltip: 'Validate',
-              child: const Icon(Icons.gesture),
+              child: const Icon(Icons.vertical_distribute_sharp),
             ),
             const SizedBox(height: 20),
           ],
