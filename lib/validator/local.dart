@@ -8,41 +8,41 @@ class LocaleEn implements FormValidatorLocale {
 
   @override
   String minLength(String v, int n) =>
-      'The field must be at least $n characters long';
+      'Field must be at least $n characters long';
 
   @override
   String maxLength(String v, int n) =>
-      'The field must be at most $n characters long';
+      'Field must be at most $n characters long';
 
   @override
-  String email(String v) => 'The field is not a valid email address';
+  String email(String v) => 'Field is not a valid email address';
 
   @override
-  String phoneNumber(String v) => 'The field is not a valid phone number';
+  String phoneNumber(String v) => 'Field is not a valid phone number';
 
   @override
-  String required() => 'The field is required';
+  String required() => 'Field is required';
 
   @override
-  String ip(String v) => 'The field is not a valid IP address';
+  String ip(String v) => 'Field is not a valid IP address';
 
   @override
-  String ipv6(String v) => 'The field is not a valid IPv6 address';
+  String ipv6(String v) => 'Field is not a valid IPv6 address';
 
   @override
-  String url(String v) => 'The field is not a valid URL address';
+  String url(String v) => 'Field is not a valid URL address';
 
   @override
-  String boolean(String v) => 'The field is not a boolean type';
+  String boolean(String v) => 'Field is not a boolean type';
 
   @override
-  String uuid(String v) => 'The field is not a valid uuid';
+  String uuid(String v) => 'Field is not a valid uuid';
 
   @override
-  String lowerCase(String v) => 'The field is not in lower case';
+  String lowerCase(String v) => 'Field is not in lower case';
 
   @override
-  String upperCase(String v) => 'The field is not in upper case';
+  String upperCase(String v) => 'Field is not in upper case';
 
   @override
   String max(String v, int n) => '$v must be less than or equal to $n';

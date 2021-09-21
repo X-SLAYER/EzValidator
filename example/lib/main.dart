@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       Map<String, String> errors = mySchema.validateSync({
         "email": 'iheb@pixelium.tn',
-        "password": '787898989898',
+        "password": '123',
         "options": 'D',
         "age": "29"
       });
