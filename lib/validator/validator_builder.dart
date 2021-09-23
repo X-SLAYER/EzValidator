@@ -8,9 +8,8 @@ typedef Action<T> = Function(T builder);
 
 class EzValidator {
   EzValidator({
-    String? localeName,
     this.optional = false,
-    FormValidatorLocale? locale = const LocaleEn(),
+    FormValidatorLocale? locale = const Locale(),
     this.requiredMessage,
   }) : _locale = locale as FormValidatorLocale {
     if (!optional) required(requiredMessage);

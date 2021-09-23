@@ -1,7 +1,7 @@
 import 'form_validator_locale.dart';
 
-class LocaleEn implements FormValidatorLocale {
-  const LocaleEn();
+class Locale implements FormValidatorLocale {
+  const Locale();
 
   @override
   String name() => 'en';
