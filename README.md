@@ -48,3 +48,6 @@ print(errors);
 
 ```
 
+## Copyright
+
+Validator code inspired from this flutter package [form_validator](https://pub.dev/packages/form_validator)
