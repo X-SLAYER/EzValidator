@@ -1,5 +1,6 @@
 import 'package:ez_validator/main.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'exemple',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -30,31 +32,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Map<String, dynamic> form = {'email': '', 'password': '', 'age': ''};
+  Map<String, String> errors = {};
+
   EzSchema mySchema = EzSchema.shape({
-    "email": EzValidator().email().required().build(),
-    "password": EzValidator().required().minLength(6).build(),
-    "options": EzValidator().notOneOf(['A', 'B']).build(),
-    "age": EzValidator()
+    "email": EzValidator().required().email().build(),
+    "password": EzValidator()
         .required()
-        .defaultTest(
-            'Test not valid please recheck', (v) => int.parse(v as String) > 18)
-        .build()
+        .minLength(6)
+        .matches(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+        .build(),
+    "age": EzValidator().required().min(18).build()
   }, identicalKeys: true);
 
   validate() {
+    /// wrap your validation method with try..catch when you add the
+    /// identicalKeys clause to your schema
     try {
-      Map<String, String> errors = mySchema.validateSync({
-        "email": 'iheb@pixelium.tn',
-        "password": '123',
-        "options": 'D',
-        "age": "29"
-      });
+      Map<String, String> errors = mySchema.validateSync(form);
       // ignore: avoid_print
       print(errors);
     } catch (e) {
-      // ignore: avoid_print
-      print(e);
+      Fluttertoast.showToast(
+        msg: "Missing fields input",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
+  }
+
+  InputDecoration _getInputDecoration(IconData icon, String label) {
+    return InputDecoration(
+      prefixIcon: Icon(icon),
+      border: InputBorder.none,
+      fillColor: const Color(0xfff3f3f4),
+      filled: true,
+      hintText: label,
+    );
+  }
+
+  _onChange(String name, String value) {
+    form[name] = value;
   }
 
   @override
@@ -65,14 +87,45 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FloatingActionButton(
-              onPressed: () => validate(),
-              tooltip: 'Validate',
-              child: const Icon(Icons.vertical_distribute_sharp),
+            Expanded(
+              child: Container(
+                color: Colors.blueGrey.withOpacity(0.7),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                        onChanged: (value) => _onChange('email', value),
+                        decoration: _getInputDecoration(Icons.email, "Email"),
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextField(
+                        onChanged: (value) => _onChange('password', value),
+                        decoration:
+                            _getInputDecoration(Icons.password, "Password"),
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) => _onChange('age', value),
+                        decoration: _getInputDecoration(
+                            Icons.supervised_user_circle_outlined, "Age"),
+                      ),
+                      const SizedBox(height: 10.0),
+                      MaterialButton(
+                        onPressed: validate,
+                        color: Colors.white,
+                        child: const Text("Sumbit"),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

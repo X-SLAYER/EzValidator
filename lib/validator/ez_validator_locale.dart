@@ -11,9 +11,12 @@ abstract class FormValidatorLocale {
   String ipv6(String v);
   String url(String v);
   String boolean(String v);
+  String number(String v);
+  String notNumber(String v);
   String uuid(String v);
   String lowerCase(String v);
   String upperCase(String v);
   String oneOf(List<String?> items, String v);
   String notOneOf(List<String?> items, String v);
+  String matches(String regex, String v);
 }

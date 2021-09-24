@@ -1,7 +1,8 @@
 final RegExp emailRegExp = RegExp(
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\-\_]+(\.[a-zA-Z]+)*$");
 final RegExp nonDigitsExp = RegExp(r'[^\d]');
-final RegExp anyLetter = RegExp(r'[A-Za-z]');
+final RegExp digitsExp = RegExp(r'^\d+$');
+final RegExp anyLetterExp = RegExp(r'[A-Za-z]');
 final RegExp phoneRegExp = RegExp(r'^\d{7,15}$');
 final RegExp ipv4RegExp = RegExp(
     r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');

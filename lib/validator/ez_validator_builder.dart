@@ -1,6 +1,6 @@
 import 'package:ez_validator/validator/regex_list.dart';
 
-import 'form_validator_locale.dart';
+import 'ez_validator_locale.dart';
 import 'local.dart';
 
 typedef StringValidationCallback = String? Function(String? value);
@@ -19,11 +19,16 @@ class EzValidator {
   final String? requiredMessage;
   final FormValidatorLocale _locale;
   final List<StringValidationCallback> validations = [];
+  static FormValidatorLocale globalLocale = const Locale();
 
   EzValidator _add(StringValidationCallback validator) {
     validations.add(validator);
     return this;
   }
+
+  // static void setLocale(FormValidatorLocale locale) {
+  //   globalLocale = locale;
+  // }
 
   String? _test(String? value) {
     for (var validate in validations) {
@@ -41,8 +46,8 @@ class EzValidator {
 
   StringValidationCallback build() => _test;
 
-  EzValidator required([String? message]) => _add(
-      (v) => v == null || v.isEmpty ? message ?? _locale.required() : null);
+  EzValidator required([String? message]) => _add((v) =>
+      v == null || v.trim().isEmpty ? message ?? _locale.required() : null);
 
   EzValidator minLength(int minLength, [String? message]) =>
       _add((v) => v!.length < minLength
@@ -60,16 +65,19 @@ class EzValidator {
           ? message ?? _locale.maxLength(v, maxLength)
           : null);
 
-  EzValidator matches(RegExp regExp, String message) =>
-      _add((v) => regExp.hasMatch(v!) ? null : message);
+  EzValidator matches(String pattern, [String? message]) =>
+      _add((v) => RegExp(pattern).hasMatch(v!)
+          ? null
+          : message ?? _locale.matches(pattern, v));
 
   EzValidator email([String? message]) => _add(
       (v) => emailRegExp.hasMatch(v!) ? null : message ?? _locale.email(v));
 
-  EzValidator phone([String? message]) => _add((v) => !anyLetter.hasMatch(v!) &&
-          phoneRegExp.hasMatch(v.replaceAll(nonDigitsExp, ''))
-      ? null
-      : message ?? _locale.phoneNumber(v));
+  EzValidator phone([String? message]) =>
+      _add((v) => !anyLetterExp.hasMatch(v!) &&
+              phoneRegExp.hasMatch(v.replaceAll(nonDigitsExp, ''))
+          ? null
+          : message ?? _locale.phoneNumber(v));
 
   EzValidator ip([String? message]) =>
       _add((v) => ipv4RegExp.hasMatch(v!) ? null : message ?? _locale.ip(v));
@@ -79,6 +87,12 @@ class EzValidator {
 
   EzValidator url([String? message]) =>
       _add((v) => urlRegExp.hasMatch(v!) ? null : message ?? _locale.url(v));
+
+  EzValidator number([String? message]) =>
+      _add((v) => digitsExp.hasMatch(v!) ? null : message ?? _locale.number(v));
+
+  EzValidator notNumber([String? message]) => _add((v) =>
+      nonDigitsExp.hasMatch(v!) ? null : message ?? _locale.notNumber(v));
 
   EzValidator boolean([String? message]) => _add(
       (v) => booleanExp.hasMatch(v!) ? null : message ?? _locale.boolean(v));
