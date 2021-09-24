@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> form = {'email': '', 'password': '', 'age': ''};
-  Map<String, String> errors = {};
+  Map<String?, String?> errors = {};
 
   EzSchema mySchema = EzSchema.shape({
     "email": EzValidator().required().email().build(),
@@ -49,7 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
     /// wrap your validation method with try..catch when you add the
     /// identicalKeys clause to your schema
     try {
-      Map<String, String> errors = mySchema.validateSync(form);
+      setState(() {
+        errors = mySchema.validateSync(form);
+      });
       // ignore: avoid_print
       print(errors);
     } catch (e) {
@@ -81,6 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    const style = TextStyle(color: Colors.red);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title as String),
@@ -92,22 +96,29 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Expanded(
               child: Container(
-                color: Colors.blueGrey.withOpacity(0.7),
+                color: Colors.black12,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextField(
                         onChanged: (value) => _onChange('email', value),
                         decoration: _getInputDecoration(Icons.email, "Email"),
                       ),
+                      (errors['email'] ?? '').isNotEmpty
+                          ? Text(errors['email'] as String, style: style)
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 10.0),
                       TextField(
                         onChanged: (value) => _onChange('password', value),
                         decoration:
                             _getInputDecoration(Icons.password, "Password"),
                       ),
+                      (errors['password'] ?? '').isNotEmpty
+                          ? Text(errors['password'] as String, style: style)
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 10.0),
                       TextField(
                         keyboardType: TextInputType.number,
@@ -115,6 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration: _getInputDecoration(
                             Icons.supervised_user_circle_outlined, "Age"),
                       ),
+                      (errors['age'] ?? '').isNotEmpty
+                          ? Text(errors['age'] as String, style: style)
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 10.0),
                       MaterialButton(
                         onPressed: validate,
