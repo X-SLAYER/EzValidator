@@ -11,7 +11,7 @@ EzValidator allow single or object validations
 
 ## Installing
 
-Add multiavatar to your pubspec:
+Add EzValidator to your pubspec:
 
 ```yaml
 dependencies:
