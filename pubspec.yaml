@@ -1,7 +1,8 @@
 name: ez_validator
 description: Dead simple field/object schema validation for flutter
 version: 0.0.1
-homepage:
+homepage: https://github.com/X-SLAYER/EzValidator
+documentation: https://github.com/X-SLAYER/EzValidator#methods
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
