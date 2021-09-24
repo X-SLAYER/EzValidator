@@ -8,6 +8,16 @@ EzValidator api is inspired by [Yup](https://github.com/jquense/yup)
 EzValidator is a flutter schema builder for value validation. Define a schema, validate the shape of an existing value, or both.
 EzValidator allow single or object validations
 
+
+## Installing
+
+Add multiavatar to your pubspec:
+
+```yaml
+dependencies:
+  ez_validator: any # or the latest version on Pub
+```
+
 ## Usage
 
 You define your schema object.
