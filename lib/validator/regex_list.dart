@@ -1,5 +1,5 @@
 final RegExp emailRegExp = RegExp(
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\-\_]+(\.[a-zA-Z]+)*$");
+    r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
 final RegExp nonDigitsExp = RegExp(r'[^\d]');
 final RegExp digitsExp = RegExp(r'^\d+$');
 final RegExp anyLetterExp = RegExp(r'[A-Za-z]');

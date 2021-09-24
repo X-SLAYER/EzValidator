@@ -40,9 +40,11 @@ class _MyHomePageState extends State<MyHomePage> {
     "password": EzValidator()
         .required()
         .minLength(6)
-        .matches(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+        .matches(
+            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
+            'Minimum six characters, at least one letter, one number and one special character')
         .build(),
-    "age": EzValidator().required().min(18).build()
+    "age": EzValidator().required().min(18).build(),
   }, identicalKeys: true);
 
   validate() {

@@ -11,26 +11,27 @@ EzValidator allow single or object validations
 ## Usage
 
 You define your schema object.
+check the exemple folder of how to use validation with multiple form with showing errors
 
 ```dart
 EzSchema mySchema = EzSchema.shape({
-  "email": EzValidator().email().required().build(),
-  "password": EzValidator().required().minLength(6).build(),
-  "options": EzValidator().notOneOf(['A', 'B']).build(),
-  "age": EzValidator()
+  "email": EzValidator().required().email().build(),
+  "password": EzValidator()
       .required()
-      .defaultTest(
-          'Test not valid please recheck', (v) => int.parse(v as String) > 18)
-      .build()
-});
+      .minLength(6)
+      .matches(
+          r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
+          'Minimum six characters, at least one letter, one number and one special character')
+      .build(),
+  "age": EzValidator().required().min(18).build(),
+}, identicalKeys: true);
 
 // check validity
 
 Map<String, String> errors = mySchema.validateSync({
   "email": 'iheb@pixelium.tn',
   "password": '444',
-  "options": 'A',
-  "age": "10"
+  "age": "17"
 });
 
 print(errors);
@@ -50,4 +51,4 @@ print(errors);
 
 ## Copyright
 
-Validator code inspired from this flutter package [form_validator](https://pub.dev/packages/form_validator)
+Validator code inspired from [form_validator](https://pub.dev/packages/form_validator)
