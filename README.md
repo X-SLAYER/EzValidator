@@ -49,6 +49,19 @@ print(errors);
 
 ```
 
+```dart
+EzSchema mySchema = EzSchema.shape({
+  .....
+  "sum": EzValidator()
+        .required()
+        .defaultTest(
+            'Test not valid please recheck', (v) => int.parse(v as String) > 25)
+        .build(),
+  ....
+};
+
+```
+
 ## Methods
 
 ### `.required([String? message])`
