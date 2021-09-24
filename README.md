@@ -38,11 +38,11 @@ print(errors);
 
 // output if the form not valid
 //
-// {
-//    "password": 'The field must be at least 6 characters long',
-//    "options": 'options must not be one of the following value: A,B',
-//    "age": 'Test not valid please recheck'
+//  {
+//    "password": "Minimum six characters, at least one letter, one number and one special character",
+//    "age": "The field must be greater than or equal to 18"
 //  }
+//
 //
 // output if the form is valid
 //{}
