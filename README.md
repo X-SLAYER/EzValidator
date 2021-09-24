@@ -48,6 +48,7 @@ print(errors);
 //{}
 
 ```
+exemple of using defaultTest
 
 ```dart
 EzSchema mySchema = EzSchema.shape({
