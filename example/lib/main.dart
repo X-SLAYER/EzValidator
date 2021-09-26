@@ -142,7 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialButton(
                         onPressed: validate,
                         color: Colors.white,
-                        child: const Text("Sumbit"),
+                        highlightColor: Colors.red,
+                        child: const Text("Submit"),
                       )
                     ],
                   ),

@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 class EzSchema {
   final Map<String, String? Function(String? value)> _schema;
 
-  /// when its true it will throw exception
+  /// when its true it will throw exception.
   /// when the form and schema has different keys
   final bool? identicalKeys;
 
   /// when it's true the form will be filled
-  /// with keys from the schema with empty string
+  /// with keys from the schema with empty string.
   /// fillSchema is [True] by default
   final bool? fillSchema;
 
