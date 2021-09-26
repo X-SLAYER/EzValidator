@@ -1,8 +1,12 @@
 import 'package:ez_validator/main.dart';
+import 'package:ez_validator_example/error_widget.dart';
+// import 'package:ez_validator_example/french_locale.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
+  /// set this in the main to set your custom locale
+  // EzValidator.setLocale(const FrenchLocale());
   runApp(const MyApp());
 }
 
@@ -32,20 +36,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Map<String, dynamic> form = {'email': '', 'password': '', 'age': ''};
+  Map<String, dynamic> form = {};
   Map<String?, String?> errors = {};
 
-  EzSchema mySchema = EzSchema.shape({
-    "email": EzValidator().required().email().build(),
-    "password": EzValidator()
-        .required()
-        .minLength(6)
-        .matches(
-            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
-            'Minimum six characters, at least one letter, one number and one special character')
-        .build(),
-    "age": EzValidator().required().min(18).build(),
-  }, identicalKeys: true);
+  EzSchema mySchema = EzSchema.shape(
+    {
+      "email": EzValidator().required().email().build(),
+      "password": EzValidator()
+          .required()
+          .minLength(6)
+          .matches(
+              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
+              'Minimum six characters, at least one letter, one number and one special character')
+          .build(),
+      "age": EzValidator().required().min(18).build(),
+      "birth_year": EzValidator().required().min(2012).max(2021).build(),
+    },
+  );
 
   validate() {
     /// wrap your validation method with try..catch when you add the
@@ -85,8 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(color: Colors.red);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title as String),
@@ -109,18 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         onChanged: (value) => _onChange('email', value),
                         decoration: _getInputDecoration(Icons.email, "Email"),
                       ),
-                      (errors['email'] ?? '').isNotEmpty
-                          ? Text(errors['email'] as String, style: style)
-                          : const SizedBox.shrink(),
+                      ErrorWIdget(name: errors['email']),
                       const SizedBox(height: 10.0),
                       TextField(
                         onChanged: (value) => _onChange('password', value),
                         decoration:
                             _getInputDecoration(Icons.password, "Password"),
                       ),
-                      (errors['password'] ?? '').isNotEmpty
-                          ? Text(errors['password'] as String, style: style)
-                          : const SizedBox.shrink(),
+                      ErrorWIdget(name: errors['password']),
                       const SizedBox(height: 10.0),
                       TextField(
                         keyboardType: TextInputType.number,
@@ -128,9 +129,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration: _getInputDecoration(
                             Icons.supervised_user_circle_outlined, "Age"),
                       ),
-                      (errors['age'] ?? '').isNotEmpty
-                          ? Text(errors['age'] as String, style: style)
-                          : const SizedBox.shrink(),
+                      ErrorWIdget(name: errors['age']),
+                      const SizedBox(height: 10.0),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) => _onChange('birth_year', value),
+                        decoration: _getInputDecoration(
+                            Icons.date_range_outlined, "Birth Year"),
+                      ),
+                      ErrorWIdget(name: errors['birth_year']),
                       const SizedBox(height: 10.0),
                       MaterialButton(
                         onPressed: validate,

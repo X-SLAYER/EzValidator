@@ -1,6 +1,6 @@
 import 'ez_validator_locale.dart';
 
-class Locale implements FormValidatorLocale {
+class Locale implements EzLocale {
   const Locale();
 
   @override

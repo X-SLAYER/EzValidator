@@ -9,26 +9,25 @@ typedef Action<T> = Function(T builder);
 class EzValidator {
   EzValidator({
     this.optional = false,
-    FormValidatorLocale? locale = const Locale(),
     this.requiredMessage,
-  }) : _locale = locale as FormValidatorLocale {
+  }) : _locale = globalLocale {
     if (!optional) required(requiredMessage);
   }
 
   final bool optional;
   final String? requiredMessage;
-  final FormValidatorLocale _locale;
+  final EzLocale _locale;
   final List<StringValidationCallback> validations = [];
-  static FormValidatorLocale globalLocale = const Locale();
+  static EzLocale globalLocale = const Locale();
 
   EzValidator _add(StringValidationCallback validator) {
     validations.add(validator);
     return this;
   }
 
-  // static void setLocale(FormValidatorLocale locale) {
-  //   globalLocale = locale;
-  // }
+  static void setLocale(EzLocale locale) {
+    globalLocale = locale;
+  }
 
   String? _test(String? value) {
     for (var validate in validations) {

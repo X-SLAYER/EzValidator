@@ -1,4 +1,4 @@
-abstract class FormValidatorLocale {
+abstract class EzLocale {
   String name();
   String required();
   String minLength(String v, int n);

@@ -7,7 +7,12 @@ class EzSchema {
   /// when the form and schema has different keys
   final bool? identicalKeys;
 
-  EzSchema.shape(this._schema, {this.identicalKeys});
+  /// when it's true the form will be filled
+  /// with keys from the schema with empty string
+  /// fillSchema is [True] by default
+  final bool? fillSchema;
+
+  EzSchema.shape(this._schema, {this.identicalKeys, this.fillSchema = true});
 
   ///validate the values you have sent and return a [Map]
   ///with errors. each error will have the key from form keys
@@ -15,6 +20,15 @@ class EzSchema {
     if (identicalKeys ?? false) {
       if (!_compareKeys(form)) {
         throw Exception("value and schema must have the same keys");
+      }
+    }
+    if (fillSchema ?? false) {
+      final _schemaKeys = _schema.keys.toList();
+      final _formKeys = form.keys.toList();
+      for (var key in _schemaKeys) {
+        if (!_formKeys.contains(key)) {
+          form[key] = '';
+        }
       }
     }
     Map<String, String> _errors = {};
