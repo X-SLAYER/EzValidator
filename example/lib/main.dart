@@ -43,11 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
     {
       "email": EzValidator().required().email().build(),
       "password": EzValidator()
-          .required()
+          .required("Password required")
           .minLength(6)
           .matches(
               r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
-              'Minimum six characters, at least one letter, one number and one special character')
+              'at least one letter, one number and one special character')
           .build(),
       "age": EzValidator().required().min(18).build(),
       "birth_year": EzValidator().required().min(2012).max(2021).build(),

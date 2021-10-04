@@ -36,8 +36,12 @@ class EzSchema {
       late String? Function(String?)? validator;
       if (_schema.containsKey(key)) {
         validator = _schema[key];
-        if (validator!(form[key]) != null) {
-          _errors[key] = validator(form[key]) ?? '';
+        try {
+          if (validator!(form[key]) != null) {
+            _errors[key] = validator(form[key]) ?? '';
+          }
+        } catch (e) {
+          _errors[key] = e.toString();
         }
       }
     });

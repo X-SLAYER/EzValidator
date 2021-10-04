@@ -9,13 +9,9 @@ typedef Action<T> = Function(T builder);
 class EzValidator {
   EzValidator({
     this.optional = false,
-    this.requiredMessage,
-  }) : _locale = globalLocale {
-    if (!optional) required(requiredMessage);
-  }
+  }) : _locale = globalLocale;
 
   final bool optional;
-  final String? requiredMessage;
   final EzLocale _locale;
   final List<StringValidationCallback> validations = [];
   static EzLocale globalLocale = const Locale();
