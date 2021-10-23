@@ -27,7 +27,7 @@ class EzSchema {
       final _formKeys = form.keys.toList();
       for (var key in _schemaKeys) {
         if (!_formKeys.contains(key)) {
-          form[key] = '';
+          form[key] = null;
         }
       }
     }

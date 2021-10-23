@@ -1,7 +1,7 @@
 import 'ez_validator_locale.dart';
 
-class Locale implements EzLocale {
-  const Locale();
+class DefaultLocale implements EzLocale {
+  const DefaultLocale();
 
   @override
   String name() => 'en';
@@ -68,4 +68,13 @@ class Locale implements EzLocale {
   @override
   String matches(String pattern, String v) =>
       "The field must match the following: $pattern";
+
+  @override
+  String date(String v) => "The field must be a date type";
+
+  @override
+  String negative(String v) => "The field must be a negative number";
+
+  @override
+  String positive(String v) => "The field must be a positive number";
 }

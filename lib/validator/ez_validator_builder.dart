@@ -1,26 +1,28 @@
+import 'package:ez_validator/validator/ez_locale.dart';
 import 'package:ez_validator/validator/regex_list.dart';
 
 import 'ez_validator_locale.dart';
-import 'local.dart';
 
 typedef StringValidationCallback = String? Function(String? value);
-typedef Action<T> = Function(T builder);
 
-class EzValidator {
+class EzValidator<T> {
   EzValidator({
     this.optional = false,
   }) : _locale = globalLocale;
 
+  /// optional by default is `False`
+  /// if optional `True` the required validation with be ignored
   final bool optional;
   final EzLocale _locale;
   final List<StringValidationCallback> validations = [];
-  static EzLocale globalLocale = const Locale();
+  static EzLocale globalLocale = const DefaultLocale();
 
   EzValidator _add(StringValidationCallback validator) {
     validations.add(validator);
     return this;
   }
 
+  /// set custom locale
   static void setLocale(EzLocale locale) {
     globalLocale = locale;
   }
@@ -54,6 +56,12 @@ class EzValidator {
 
   EzValidator max(int min, [String? message]) => _add(
       (v) => int.parse('$v') >= min ? message ?? _locale.max('$v', min) : null);
+
+  EzValidator positive([String? message]) =>
+      _add((v) => int.parse('$v') < 0 ? message ?? _locale.positive(v!) : null);
+
+  EzValidator negative([String? message]) =>
+      _add((v) => int.parse('$v') > 0 ? message ?? _locale.negative(v!) : null);
 
   EzValidator maxLength(int maxLength, [String? message]) =>
       _add((v) => v!.length > maxLength
@@ -97,6 +105,12 @@ class EzValidator {
 
   EzValidator lowerCase([String? message]) => _add(
       (v) => v == v!.toLowerCase() ? null : message ?? _locale.lowerCase(v));
+
+  EzValidator date([String? message]) => _add(
+        (v) => DateTime.tryParse(v ?? '') != null
+            ? null
+            : message ?? _locale.date(v!),
+      );
 
   EzValidator upperCase([String? message]) => _add(
       (v) => v == v!.toUpperCase() ? null : message ?? _locale.upperCase(v));

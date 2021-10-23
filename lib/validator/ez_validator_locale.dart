@@ -4,6 +4,8 @@ abstract class EzLocale {
   String minLength(String v, int n);
   String min(String v, int n);
   String max(String v, int n);
+  String positive(String v);
+  String negative(String v);
   String maxLength(String v, int n);
   String email(String v);
   String phoneNumber(String v);
@@ -16,6 +18,7 @@ abstract class EzLocale {
   String uuid(String v);
   String lowerCase(String v);
   String upperCase(String v);
+  String date(String v);
   String oneOf(List<String?> items, String v);
   String notOneOf(List<String?> items, String v);
   String matches(String regex, String v);
