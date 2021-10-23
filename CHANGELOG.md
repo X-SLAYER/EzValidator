@@ -7,3 +7,6 @@
 ## 0.1.2
 
 * fix web plugin error + required custom messages
+## 0.1.3
+
+* add new validations methods
