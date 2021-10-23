@@ -36,7 +36,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Map<String, dynamic> form = {};
+  Map<String, dynamic> form = {
+    "number": '5',
+    "pos": '-5',
+    "date": "00-00-00", //DateTime.now().toIso8601String()
+  };
   Map<String?, String?> errors = {};
 
   EzSchema mySchema = EzSchema.shape(
@@ -50,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
               'at least one letter, one number and one special character')
           .build(),
       "age": EzValidator().required().min(18).build(),
+      "number": EzValidator().required().positive().build(),
+      "pos": EzValidator().required().negative().build(),
+      "date": EzValidator().required().date().build(),
       "birth_year": EzValidator().required().min(2012).max(2021).build(),
     },
   );
@@ -62,7 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
         errors = mySchema.validateSync(form);
       });
       // ignore: avoid_print
-      print(errors);
+      errors.forEach((key, value) {
+        // ignore: avoid_print
+        print('$key ===> $value');
+      });
     } catch (e) {
       Fluttertoast.showToast(
         msg: "Missing fields input",
