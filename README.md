@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="#"><img src="ez_validator.logo.png" /></a>
+  <a href="#"><img src="ez_validator_logo.png" height=250 /></a>
 </p>
 
 # ez_validator
