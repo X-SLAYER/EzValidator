@@ -5,7 +5,7 @@ import 'ez_validator_locale.dart';
 
 typedef StringValidationCallback = String? Function(String? value);
 
-class EzValidator<T> {
+class EzValidator {
   EzValidator({
     this.optional = false,
   }) : _locale = globalLocale;
