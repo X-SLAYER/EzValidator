@@ -32,7 +32,7 @@ class EzSchema {
       }
     }
     Map<String, String> _errors = {};
-    form.forEach((key, value) {
+    for (var key in form.keys) {
       late String? Function(String?)? validator;
       if (_schema.containsKey(key)) {
         validator = _schema[key];
@@ -44,7 +44,7 @@ class EzSchema {
           _errors[key] = e.toString();
         }
       }
-    });
+    }
     return _errors;
   }
 
