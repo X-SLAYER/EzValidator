@@ -1,12 +1,12 @@
 import 'package:ez_validator/main.dart';
 import 'package:ez_validator_example/error_widget.dart';
+import 'package:ez_validator_example/fr.dart';
 // import 'package:ez_validator_example/french_locale.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   /// set this in the main to set your custom locale
-  // EzValidator.setLocale(const FrenchLocale());
   runApp(const MyApp());
 }
 
@@ -154,6 +154,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.white,
                         highlightColor: Colors.red,
                         child: const Text("Submit"),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          EzValidator.setLocale(const FrLocale());
+                        },
+                        color: Colors.white,
+                        highlightColor: Colors.red,
+                        child: const Text("Fr Locale"),
                       )
                     ],
                   ),
