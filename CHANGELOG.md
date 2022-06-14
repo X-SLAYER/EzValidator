@@ -10,3 +10,6 @@
 ## 0.1.3
 
 * add new validations methods
+## 0.1.4
+
+* Fix languages toggle
