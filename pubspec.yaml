@@ -1,6 +1,6 @@
 name: ez_validator
 description: Dead simple field/object schema validation for flutter,EzValidator api is inspired by Yup
-version: 0.1.4
+version: 0.1.5
 homepage: https://github.com/X-SLAYER/EzValidator
 documentation: https://github.com/X-SLAYER/EzValidator#methods
 
@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  plugin_platform_interface: ^2.1.2
   flutter_web_plugins:
     sdk: flutter
 
@@ -34,6 +35,12 @@ flutter:
         package: com.example.ez_validator
         pluginClass: EzValidatorPlugin
       ios:
+        pluginClass: EzValidatorPlugin
+      macos:
+        pluginClass: EzValidatorPlugin
+      linux:
+        pluginClass: EzValidatorPlugin
+      windows:
         pluginClass: EzValidatorPlugin
       web:
         pluginClass: EzValidatorWeb
