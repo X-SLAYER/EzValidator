@@ -13,3 +13,6 @@
 ## 0.1.4
 
 * Fix languages toggle
+## 0.1.5
+
+* Add support to all platforms
