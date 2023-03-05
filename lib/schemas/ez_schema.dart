@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class EzSchema {
   final Map<String, String? Function(String? value)> _schema;
 
@@ -50,5 +48,23 @@ class EzSchema {
 
   bool _compareKeys(Map<String, dynamic> form) {
     return (listEquals(form.keys.toList(), _schema.keys.toList()));
+  }
+
+  bool listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) {
+      return b == null;
+    }
+    if (b == null || a.length != b.length) {
+      return false;
+    }
+    if (identical(a, b)) {
+      return true;
+    }
+    for (int index = 0; index < a.length; index += 1) {
+      if (a[index] != b[index]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
