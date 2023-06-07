@@ -27,3 +27,8 @@
 - Fix support for Desktop platforms
 - Fix typos
 - Remove unused files
+
+## 0.2.2
+
+- Add default values
+- Add error key labels
