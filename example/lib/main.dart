@@ -45,19 +45,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   EzSchema mySchema = EzSchema.shape(
     {
-      "email": EzValidator().required().email().build(),
-      "password": EzValidator()
-          .required("Password required")
+      "email": EzValidator(label: "l'email").required().email().build(),
+      "password": EzValidator(label: 'Mot de pass')
+          .required()
           .minLength(6)
           .matches(
               r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
               'at least one letter, one number and one special character')
           .build(),
-      "age": EzValidator().required().min(18).build(),
+      "age": EzValidator(label: 'Age', defaultValue: 22)
+          .required()
+          .min(18)
+          .build(),
       "number": EzValidator().required().positive().build(),
       "pos": EzValidator().required().negative().build(),
-      "date": EzValidator().required().date().build(),
-      "birth_year": EzValidator().required().min(2012).max(2021).build(),
+      "date": EzValidator(label: 'Date').required().date().build(),
+      "birth_year": EzValidator(label: 'Date of Birth')
+          .required()
+          .min(2012)
+          .max(2021)
+          .build(),
     },
   );
 

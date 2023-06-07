@@ -7,72 +7,87 @@ class FrLocale implements EzLocale {
   String name() => 'fr';
 
   @override
-  String minLength(String v, int n) =>
-      'Le champ doit contenir au moins $n caractères';
+  String minLength(String v, int n, [String? label]) =>
+      '${label ?? 'Ce champ'} doit contenir au moins $n caractères';
   @override
-  String maxLength(String v, int n) =>
-      'Le champ doit contenir au plus $n caractères';
+  String maxLength(String v, int n, [String? label]) =>
+      '${label ?? 'Ce champ'} doit contenir au plus $n caractères';
   @override
-  String email(String v) => 'Le champ n\'est pas une adresse e-mail valide';
+  String email(String v, [String? label]) =>
+      '${label ?? 'Ce champ'} n\'est pas une adresse e-mail valide';
 
   @override
-  String phoneNumber(String v) =>
-      "Le champ n'est pas un numéro de téléphone valide";
+  String phoneNumber(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas un numéro de téléphone valide";
 
   @override
-  String required() => 'Ce champ est requis';
+  String required([String? label]) => '${label ?? 'Ce champ'} est requis';
 
   @override
-  String ip(String v) => 'Le champ n\'est pas une adresse IP valide';
+  String ip(String v, [String? label]) =>
+      '${label ?? 'Ce champ'} n\'est pas une adresse IP valide';
 
   @override
-  String ipv6(String v) => 'Le champ n\'est pas une adresse IPv6 valide';
+  String ipv6(String v, [String? label]) =>
+      '${label ?? 'Ce champ'} n\'est pas une adresse IPv6 valide';
 
   @override
-  String url(String v) => 'Le champ n\'est pas une adresse URL valide';
+  String url(String v, [String? label]) =>
+      '${label ?? 'Ce champ'} n\'est pas une adresse URL valide';
 
   @override
-  String boolean(String v) => 'Le champ n\'est pas de type booléen';
+  String boolean(String v, [String? label]) =>
+      '${label ?? 'Ce champ'} n\'est pas de type booléen';
 
   @override
-  String uuid(String v) => "Le champ n'est pas un uuid valide";
+  String uuid(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas un uuid valide";
 
   @override
-  String lowerCase(String v) => "Le champ n'est pas en minuscule";
+  String lowerCase(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas en minuscule";
 
   @override
-  String upperCase(String v) => "Le champ n'est pas en majuscule";
+  String upperCase(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas en majuscule";
 
   @override
-  String max(String v, int n) => "Le champ doit être inférieur ou égal à $n";
+  String max(String v, int n, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être inférieur ou égal à $n";
 
   @override
-  String min(String v, int n) => "Le champ doit être supérieur ou égal à $n";
+  String min(String v, int n, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être supérieur ou égal à $n";
 
   @override
-  String oneOf(List<String?> items, String v) =>
-      "Le champ doit être l'une des valeurs suivantes : ${items.join(',')}";
+  String oneOf(List<String?> items, String v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être l'une des valeurs suivantes : ${items.join(',')}";
 
   @override
-  String notOneOf(List<String?> items, String v) =>
-      "Le champ ne doit pas être l'une des valeurs suivantes : ${items.join(',')}";
+  String notOneOf(List<String?> items, String v, [String? label]) =>
+      "${label ?? 'Ce champ'} ne doit pas être l'une des valeurs suivantes : ${items.join(',')}";
 
   @override
-  String notNumber(String v) => "Le champ ne doit pas être un nombre";
+  String notNumber(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} ne doit pas être un nombre";
 
   @override
-  String number(String v) => "Le champ n'est pas un numéro valide";
+  String number(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas un numéro valide";
 
   @override
-  String matches(String pattern, String v) =>
-      "Le champ doit correspondre à ce qui suit : $pattern";
+  String matches(String pattern, String v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit correspondre à ce qui suit : $pattern";
 
   @override
-  String date(String v) => "Le champ doit être de type date";
+  String date(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être de type date";
 
   @override
-  String negative(String v) => "Le champ doit être un nombre négatif";
+  String negative(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être un nombre négatif";
 
   @override
-  String positive(String v) => "Le champ doit être un nombre positif";
+  String positive(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être un nombre positif";
 }
