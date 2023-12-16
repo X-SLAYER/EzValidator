@@ -1,4 +1,4 @@
-import 'package:ez_validator/src/validator/ez_validator_builder.dart';
+import 'package:ez_validator/ez_validator.dart';
 import 'package:test/test.dart';
 
 void main() {
