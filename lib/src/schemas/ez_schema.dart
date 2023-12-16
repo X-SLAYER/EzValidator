@@ -17,22 +17,22 @@ class EzSchema {
   Map<dynamic, dynamic> catchErrors(Map<dynamic, dynamic> form) {
     final data = _fillSchemaIfNeeded(form);
 
-    Map<String, dynamic> _errors = {};
+    Map<String, dynamic> errors = {};
     _schema.forEach((key, value) {
       if (value is EzValidator) {
         var error = value.build()(data[key]);
         if (error != null) {
-          _errors[key] = error;
+          errors[key] = error;
         }
       } else if (value is EzSchema) {
         var nestedErrors = value.catchErrors(data[key] ?? {});
         if (nestedErrors.isNotEmpty) {
-          _errors[key] = nestedErrors;
+          errors[key] = nestedErrors;
         }
       }
     });
 
-    return _errors;
+    return errors;
   }
 
   /// validate the values you have sent and return a [Map]
@@ -42,8 +42,8 @@ class EzSchema {
     Map<dynamic, dynamic> form,
   ) {
     final data = _fillSchemaIfNeeded(form);
-    final _errors = catchErrors(data);
-    return (data, _errors);
+    final errors = catchErrors(data);
+    return (data, errors);
   }
 
   /// validate the values you have sent and return a [Boolean]
