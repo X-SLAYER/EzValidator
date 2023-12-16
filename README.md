@@ -28,8 +28,6 @@ To begin with `EzValidator`, define a schema object that represents the structur
 
 Create a schema using `EzSchema.shape` where each field in the data object is associated with an `EzValidator` specifying its validation rules:
 
-dartCopy code
-
 ```dart
 final EzSchema userSchema = EzSchema.shape(
   {
