@@ -1,5 +1,7 @@
+import '../validator/ez_validator_builder.dart';
+
 class EzSchema {
-  final Map<String, String? Function(String? value)> _schema;
+  final Map<String, EzValidator> _schema;
 
   /// when its true it will throw exception.
   /// when the form and schema has different keys
@@ -14,6 +16,9 @@ class EzSchema {
 
   ///validate the values you have sent and return a [Map]
   ///with errors. each error will have the key from form keys
+  ///
+  /// it will return a `Map` with errors
+  /// if there is no errors it will return an empty `Map`
   Map<String, String> validateSync(Map<String, dynamic> form) {
     if (identicalKeys ?? false) {
       if (!_compareKeys(form)) {
@@ -25,17 +30,17 @@ class EzSchema {
       final _formKeys = form.keys.toList();
       for (var key in _schemaKeys) {
         if (!_formKeys.contains(key)) {
-          form[key] = null;
+          form[key] = _schema[key]?.defaultValue;
         }
       }
     }
     Map<String, String> _errors = {};
     for (var key in form.keys) {
-      late String? Function(String?)? validator;
+      late String? Function(dynamic) validator;
       if (_schema.containsKey(key)) {
-        validator = _schema[key];
+        validator = _schema[key]!.build();
         try {
-          if (validator!(form[key]) != null) {
+          if (validator(form[key]) != null) {
             _errors[key] = validator(form[key]) ?? '';
           }
         } catch (e) {
@@ -47,10 +52,10 @@ class EzSchema {
   }
 
   bool _compareKeys(Map<String, dynamic> form) {
-    return (listEquals(form.keys.toList(), _schema.keys.toList()));
+    return (_listEquals(form.keys.toList(), _schema.keys.toList()));
   }
 
-  bool listEquals<T>(List<T>? a, List<T>? b) {
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
     if (a == null) {
       return b == null;
     }

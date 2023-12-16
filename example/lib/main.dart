@@ -1,4 +1,4 @@
-import 'package:ez_validator/main.dart';
+import 'package:ez_validator/ez_validator.dart';
 import 'package:ez_validator_example/error_widget.dart';
 import 'package:ez_validator_example/fr.dart';
 // import 'package:ez_validator_example/french_locale.dart';
@@ -45,26 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   EzSchema mySchema = EzSchema.shape(
     {
-      "email": EzValidator(label: "l'email").required().email().build(),
-      "password": EzValidator(label: 'Mot de pass')
-          .required()
-          .minLength(6)
-          .matches(
-              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
-              'at least one letter, one number and one special character')
-          .build(),
-      "age": EzValidator(label: 'Age', defaultValue: 22)
-          .required()
-          .min(18)
-          .build(),
-      "number": EzValidator().required().positive().build(),
-      "pos": EzValidator().required().negative().build(),
-      "date": EzValidator(label: 'Date').required().date().build(),
-      "birth_year": EzValidator(label: 'Date of Birth')
-          .required()
-          .min(2012)
-          .max(2021)
-          .build(),
+      "email": EzValidator<String>(label: "l'email").required().email(),
+      "password":
+          EzValidator<String>(label: 'le mot de passe').required().minLength(8),
+      "age": EzValidator<num>(label: 'l\'age').required().number(),
     },
   );
 
