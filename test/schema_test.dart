@@ -18,12 +18,6 @@ void main() {
   final EzSchema arraySchema = EzSchema.shape(
       {"nodes": EzValidator<List>().required().listOf(int).minLength(2)});
 
-  final addressSchema = EzSchema.shape({
-    'street': EzValidator<String?>(optional: true).required(),
-    'city': EzValidator<String?>(optional: true).required(),
-    'zipCode': EzValidator<num?>(defaultValue: 5000).required(),
-  });
-
   final EzSchema personSchema = EzSchema.shape(
     {
       "firstName": EzValidator<String>().required(),
@@ -36,12 +30,6 @@ void main() {
           .date()
           .minDate(DateTime(1900))
           .maxDate(DateTime(2005)),
-      'address': EzValidator<Map<String, dynamic>>(label: 'Location')
-          .required()
-          .addMethod(
-            (v) => v != null && addressSchema.isValid(v),
-            'Invalid address',
-          ),
     },
   );
 
