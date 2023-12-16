@@ -1,75 +1,84 @@
 import '../validator/ez_validator_builder.dart';
 
 class EzSchema {
-  final Map<String, EzValidator> _schema;
-
-  /// when its true it will throw exception.
-  /// when the form and schema has different keys
-  final bool? identicalKeys;
+  final Map<String, dynamic> _schema;
 
   /// when it's true the form will be filled
   /// with keys from the schema with empty string.
   /// fillSchema is [True] by default
   final bool? fillSchema;
 
-  EzSchema.shape(this._schema, {this.identicalKeys, this.fillSchema = true});
+  EzSchema.shape(this._schema, {this.fillSchema = true});
 
-  ///validate the values you have sent and return a [Map]
-  ///with errors. each error will have the key from form keys
+  /// validate the values you have sent and return a [Map]
+  /// with errors. each error will have the key from form keys
   ///
-  /// it will return a `Map` with errors
   /// if there is no errors it will return an empty `Map`
-  Map<String, String> validateSync(Map<String, dynamic> form) {
-    if (identicalKeys ?? false) {
-      if (!_compareKeys(form)) {
-        throw Exception("value and schema must have the same keys");
-      }
-    }
-    if (fillSchema ?? false) {
-      final _schemaKeys = _schema.keys.toList();
-      final _formKeys = form.keys.toList();
-      for (var key in _schemaKeys) {
-        if (!_formKeys.contains(key)) {
-          form[key] = _schema[key]?.defaultValue;
+  Map<dynamic, dynamic> catchErrors(Map<dynamic, dynamic> form) {
+    final data = _fillSchemaIfNeeded(form);
+
+    Map<String, dynamic> _errors = {};
+    _schema.forEach((key, value) {
+      if (value is EzValidator) {
+        var error = value.build()(data[key]);
+        if (error != null) {
+          _errors[key] = error;
+        }
+      } else if (value is EzSchema) {
+        var nestedErrors = value.catchErrors(data[key] ?? {});
+        if (nestedErrors.isNotEmpty) {
+          _errors[key] = nestedErrors;
         }
       }
-    }
-    Map<String, String> _errors = {};
-    for (var key in form.keys) {
-      late String? Function(dynamic) validator;
-      if (_schema.containsKey(key)) {
-        validator = _schema[key]!.build();
-        try {
-          if (validator(form[key]) != null) {
-            _errors[key] = validator(form[key]) ?? '';
-          }
-        } catch (e) {
-          _errors[key] = e.toString();
-        }
-      }
-    }
+    });
+
     return _errors;
   }
 
-  bool _compareKeys(Map<String, dynamic> form) {
-    return (_listEquals(form.keys.toList(), _schema.keys.toList()));
+  /// validate the values you have sent and return a [Map]
+  ///
+  /// It will return a `Map` with errors and the data
+  (Map<dynamic, dynamic> data, Map<dynamic, dynamic> errors) validateSync(
+    Map<dynamic, dynamic> form,
+  ) {
+    final data = _fillSchemaIfNeeded(form);
+    final _errors = catchErrors(data);
+    return (data, _errors);
   }
 
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) {
-      return b == null;
+  /// validate the values you have sent and return a [Boolean]
+  bool isValid(Map<String, dynamic> form) => catchErrors(form).isEmpty;
+
+  Map<String, dynamic> _fillSchemaIfNeeded(Map<dynamic, dynamic> form) {
+    final data = Map<String, dynamic>.from(form);
+
+    if (fillSchema ?? false) {
+      _schema.forEach((key, value) {
+        if (value is EzValidator) {
+          data[key] ??= value.defaultValue;
+        } else if (value is EzSchema) {
+          if (!form.containsKey(key) || form[key] is! Map<String, dynamic>) {
+            data[key] = value._populateDefaultValues();
+          } else {
+            data[key] =
+                value._fillSchemaIfNeeded(form[key] as Map<String, dynamic>);
+          }
+        }
+      });
     }
-    if (b == null || a.length != b.length) {
-      return false;
-    }
-    if (identical(a, b)) {
-      return true;
-    }
-    for (int index = 0; index < a.length; index += 1) {
-      if (a[index] != b[index]) {
-        return false;
+
+    return data;
+  }
+
+  Map<String, dynamic> _populateDefaultValues() {
+    Map<String, dynamic> defaults = {};
+    _schema.forEach((key, value) {
+      if (value is EzValidator) {
+        defaults[key] = value.optional ? null : value.defaultValue;
+      } else if (value is EzSchema) {
+        defaults[key] = value._populateDefaultValues();
       }
-    }
-    return true;
+    });
+    return defaults;
   }
 }

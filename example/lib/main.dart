@@ -39,9 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> form = {
     "number": '5',
     "pos": '-5',
-    "date": "00-00-00", //DateTime.now().toIso8601String()
+    "date": "00-00-00",
   };
-  Map<String?, String?> errors = {};
+  Map<dynamic, dynamic> errors = {};
 
   EzSchema mySchema = EzSchema.shape(
     {
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     /// identicalKeys clause to your schema
     try {
       setState(() {
-        errors = mySchema.validateSync(form);
+        errors = mySchema.catchErrors(form);
       });
       // ignore: avoid_print
       errors.forEach((key, value) {
