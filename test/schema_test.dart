@@ -59,6 +59,12 @@ void main() {
           .matches(RegExp(r'^\+\d{10,15}$'), 'Invalid phone number'),
       'landline': EzValidator<String?>(optional: true),
     }),
+    'level': EzValidator<String>(defaultValue: 'Beginner').required().oneOf([
+      'Beginner',
+      'Intermediate',
+      'Advanced',
+      'Expert',
+    ]),
     'address': EzSchema.shape({
       'street': EzValidator<String>().required(),
       'city': EzValidator<String>().required(),

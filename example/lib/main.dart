@@ -1,3 +1,7 @@
+// ignore_for_file: avoid_print
+
+import 'dart:io';
+
 import 'package:ez_validator/ez_validator.dart';
 import 'package:ez_validator_example/error_widget.dart';
 import 'package:ez_validator_example/fr.dart';
@@ -36,35 +40,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Map<String, dynamic> form = {
-    "number": '5',
-    "pos": '-5',
-    "date": "00-00-00",
-  };
+  Map<String, dynamic> form = {"number": '5', "pos": '-5', 'file': File('')};
   Map<dynamic, dynamic> errors = {};
 
-  EzSchema mySchema = EzSchema.shape(
+  EzSchema formSchema = EzSchema.shape(
     {
       "email": EzValidator<String>(label: "l'email").required().email(),
       "password":
           EzValidator<String>(label: 'le mot de passe').required().minLength(8),
-      "age": EzValidator<num>(label: 'l\'age').required().number(),
+      "age": EzValidator<num>(label: 'l\'age').required().number().max(18),
+      "birth_year": EzValidator<int>().required().number().min(2017),
+      "file": EzValidator<File>().required().addMethod((file) =>
+          file != null &&
+          file
+              .lastAccessedSync()
+              .isAfter(DateTime.now().subtract(const Duration(days: 1)))),
+      "date":
+          EzValidator<DateTime>(defaultValue: DateTime(2018)).required().date(),
     },
   );
 
-  validate() {
+  void validate() {
     /// wrap your validation method with try..catch when you add the
     /// identicalKeys clause to your schema
     try {
+      final res = formSchema.validateSync(form);
       setState(() {
-        errors = mySchema.catchErrors(form);
+        errors = res.$2;
       });
-      // ignore: avoid_print
+      print(res.$1);
       errors.forEach((key, value) {
-        // ignore: avoid_print
         print('$key ===> $value');
       });
     } catch (e) {
+      print(e);
       Fluttertoast.showToast(
         msg: "Missing fields input",
         toastLength: Toast.LENGTH_SHORT,
@@ -87,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _onChange(String name, String value) {
+  _onChange(String name, dynamic value) {
     form[name] = value;
   }
 
@@ -134,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(height: 10.0),
                       TextField(
                         keyboardType: TextInputType.number,
-                        onChanged: (value) => _onChange('birth_year', value),
+                        onChanged: (value) =>
+                            _onChange('birth_year', int.tryParse(value)),
                         decoration: _getInputDecoration(
                             Icons.date_range_outlined, "Birth Year"),
                       ),

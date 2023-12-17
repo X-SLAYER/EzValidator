@@ -10,6 +10,12 @@ class EzSchema {
 
   EzSchema.shape(this._schema, {this.fillSchema = true});
 
+  /// access to the values of the schema
+  Map<String, dynamic> get schema => _schema;
+
+  /// get the values of the schema with specific key
+  dynamic operator [](String key) => _schema[key];
+
   /// validate the values you have sent and return a [Map]
   /// with errors. each error will have the key from form keys
   ///
@@ -45,9 +51,6 @@ class EzSchema {
     final errors = catchErrors(data);
     return (data, errors);
   }
-
-  /// validate the values you have sent and return a [Boolean]
-  bool isValid(Map<String, dynamic> form) => catchErrors(form).isEmpty;
 
   Map<String, dynamic> _fillSchemaIfNeeded(Map<dynamic, dynamic> form) {
     final data = Map<String, dynamic>.from(form);
