@@ -25,7 +25,7 @@
 - Add default values
 - Add error key labels
 
-## 0.2.2
+## 0.3.0
 - Nested Validation Support
 - Extended Validation Methods:
   - String Validation Methods
