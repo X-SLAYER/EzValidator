@@ -1,4 +1,8 @@
-import 'package:ez_validator/main.dart';
+// ignore_for_file: avoid_print
+
+import 'dart:io';
+
+import 'package:ez_validator/ez_validator.dart';
 import 'package:ez_validator_example/error_widget.dart';
 import 'package:ez_validator_example/fr.dart';
 // import 'package:ez_validator_example/french_locale.dart';
@@ -36,51 +40,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Map<String, dynamic> form = {
-    "number": '5',
-    "pos": '-5',
-    "date": "00-00-00", //DateTime.now().toIso8601String()
-  };
-  Map<String?, String?> errors = {};
+  Map<String, dynamic> form = {"number": '5', "pos": '-5', 'file': File('')};
+  Map<dynamic, dynamic> errors = {};
 
-  EzSchema mySchema = EzSchema.shape(
+  EzSchema formSchema = EzSchema.shape(
     {
-      "email": EzValidator(label: "l'email").required().email().build(),
-      "password": EzValidator(label: 'Mot de pass')
-          .required()
-          .minLength(6)
-          .matches(
-              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
-              'at least one letter, one number and one special character')
-          .build(),
-      "age": EzValidator(label: 'Age', defaultValue: 22)
-          .required()
-          .min(18)
-          .build(),
-      "number": EzValidator().required().positive().build(),
-      "pos": EzValidator().required().negative().build(),
-      "date": EzValidator(label: 'Date').required().date().build(),
-      "birth_year": EzValidator(label: 'Date of Birth')
-          .required()
-          .min(2012)
-          .max(2021)
-          .build(),
+      "email": EzValidator<String>(label: "l'email").required().email(),
+      "password":
+          EzValidator<String>(label: 'le mot de passe').required().minLength(8),
+      "age": EzValidator<num>(label: 'l\'age').required().number().max(18),
+      "birth_year": EzValidator<int>().required().number().min(2017),
+      "file": EzValidator<File>().required().addMethod((file) =>
+          file != null &&
+          file
+              .lastAccessedSync()
+              .isAfter(DateTime.now().subtract(const Duration(days: 1)))),
+      "date":
+          EzValidator<DateTime>(defaultValue: DateTime(2018)).required().date(),
     },
   );
 
-  validate() {
+  void validate() {
     /// wrap your validation method with try..catch when you add the
     /// identicalKeys clause to your schema
     try {
+      final res = formSchema.validateSync(form);
       setState(() {
-        errors = mySchema.validateSync(form);
+        errors = res.$2;
       });
-      // ignore: avoid_print
+      print(res.$1);
       errors.forEach((key, value) {
-        // ignore: avoid_print
         print('$key ===> $value');
       });
     } catch (e) {
+      print(e);
       Fluttertoast.showToast(
         msg: "Missing fields input",
         toastLength: Toast.LENGTH_SHORT,
@@ -103,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _onChange(String name, String value) {
+  _onChange(String name, dynamic value) {
     form[name] = value;
   }
 
@@ -150,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(height: 10.0),
                       TextField(
                         keyboardType: TextInputType.number,
-                        onChanged: (value) => _onChange('birth_year', value),
+                        onChanged: (value) =>
+                            _onChange('birth_year', int.tryParse(value)),
                         decoration: _getInputDecoration(
                             Icons.date_range_outlined, "Birth Year"),
                       ),

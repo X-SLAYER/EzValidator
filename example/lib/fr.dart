@@ -1,4 +1,4 @@
-import 'package:ez_validator/validator/ez_validator_locale.dart';
+import 'package:ez_validator/ez_validator.dart';
 
 class FrLocale implements EzLocale {
   const FrLocale();
@@ -52,19 +52,19 @@ class FrLocale implements EzLocale {
       "${label ?? 'Ce champ'} n'est pas en majuscule";
 
   @override
-  String max(String v, int n, [String? label]) =>
+  String max(String v, num n, [String? label]) =>
       "${label ?? 'Ce champ'} doit être inférieur ou égal à $n";
 
   @override
-  String min(String v, int n, [String? label]) =>
+  String min(String v, num n, [String? label]) =>
       "${label ?? 'Ce champ'} doit être supérieur ou égal à $n";
 
   @override
-  String oneOf(List<String?> items, String v, [String? label]) =>
+  String oneOf(List<dynamic> items, String v, [String? label]) =>
       "${label ?? 'Ce champ'} doit être l'une des valeurs suivantes : ${items.join(',')}";
 
   @override
-  String notOneOf(List<String?> items, String v, [String? label]) =>
+  String notOneOf(List<dynamic> items, String v, [String? label]) =>
       "${label ?? 'Ce champ'} ne doit pas être l'une des valeurs suivantes : ${items.join(',')}";
 
   @override
@@ -84,10 +84,33 @@ class FrLocale implements EzLocale {
       "${label ?? 'Ce champ'} doit être de type date";
 
   @override
+  String dateMin(String v, DateTime min, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être supérieur ou égal à ${min.toIso8601String()}";
+  @override
+  String dateMax(String v, DateTime min, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être inférieur ou égal à ${min.toIso8601String()}";
+
+  @override
   String negative(String v, [String? label]) =>
       "${label ?? 'Ce champ'} doit être un nombre négatif";
 
   @override
   String positive(String v, [String? label]) =>
       "${label ?? 'Ce champ'} doit être un nombre positif";
+
+  @override
+  String listOf(dynamic v, [String? label]) =>
+      "${label ?? 'Ce champ'} doit être une liste de ${v.runtimeType}";
+
+  @override
+  String isDouble(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas un nombre valide";
+
+  @override
+  String isInt(String v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas un nombre valide";
+
+  @override
+  String isTypeOf(v, [String? label]) =>
+      "${label ?? 'Ce champ'} n'est pas du type ${v.runtimeType}";
 }

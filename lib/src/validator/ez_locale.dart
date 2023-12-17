@@ -54,19 +54,19 @@ class DefaultLocale implements EzLocale {
       '${label ?? 'The field'} is not in upper case';
 
   @override
-  String max(String v, int n, [String? label]) =>
+  String max(String v, num n, [String? label]) =>
       '${label ?? 'The field'} must be less than or equal to $n';
 
   @override
-  String min(String v, int n, [String? label]) =>
+  String min(String v, num n, [String? label]) =>
       '${label ?? 'The field'} must be greater than or equal to $n';
 
   @override
-  String oneOf(List<String?> items, String v, [String? label]) =>
+  String oneOf(List<dynamic> items, String v, [String? label]) =>
       '${label ?? 'The field'} must be one of the following values: ${items.join(',')}';
 
   @override
-  String notOneOf(List<String?> items, String v, [String? label]) =>
+  String notOneOf(List<dynamic> items, String v, [String? label]) =>
       '${label ?? 'The field'} must not be one of the following value: ${items.join(',')}';
 
   @override
@@ -78,6 +78,14 @@ class DefaultLocale implements EzLocale {
       '${label ?? 'The field'} is not a valid number';
 
   @override
+  String isInt(String v, [String? label]) =>
+      '${label ?? 'The field'} is not a valid number';
+
+  @override
+  String isDouble(String v, [String? label]) =>
+      '${label ?? 'The field'} is not a valid number';
+
+  @override
   String matches(String pattern, String v, [String? label]) =>
       "${label ?? 'The field'} must match the following: $pattern";
 
@@ -86,10 +94,26 @@ class DefaultLocale implements EzLocale {
       "${label ?? 'The field'} must be a date type";
 
   @override
+  String dateMin(String v, DateTime min, [String? label]) =>
+      "${label ?? 'The field'} must be greater than or equal to ${min.toIso8601String()}";
+
+  @override
+  String dateMax(String v, DateTime min, [String? label]) =>
+      "${label ?? 'The field'} must be less than or equal to ${min.toIso8601String()}";
+
+  @override
   String negative(String v, [String? label]) =>
       "${label ?? 'The field'} must be a negative number";
 
   @override
   String positive(String v, [String? label]) =>
       "${label ?? 'The field'} must be a positive number";
+
+  @override
+  String listOf(dynamic v, [String? label]) =>
+      "${label ?? 'The field'} must be a list of $v";
+
+  @override
+  String isTypeOf(v, [String? label]) =>
+      "${label ?? 'The field'} must be a $v type";
 }
