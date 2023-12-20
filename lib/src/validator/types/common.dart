@@ -94,6 +94,13 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
       return validator(currentFieldValue, ref);
     });
   }
+
+  /// Transform the value before running the validation
+  /// [transformFunction] is the function to run on the value
+  EzValidator<T> transform(T Function(T) transformFunction) {
+    transformationFunction = transformFunction;
+    return this;
+  }
 }
 
 extension OptionalValidation<T> on T? {
