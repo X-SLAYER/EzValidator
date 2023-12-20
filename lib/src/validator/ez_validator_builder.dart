@@ -3,7 +3,8 @@ import 'package:ez_validator/src/validator/ez_locale.dart';
 
 import 'ez_validator_locale.dart';
 
-typedef ValidationCallback<T> = String? Function(T? value);
+typedef ValidationCallback<T> = String? Function(T? value,
+    [Map<dynamic, dynamic>? ref]);
 
 class EzValidator<T> {
   EzValidator({
@@ -35,7 +36,7 @@ class EzValidator<T> {
     globalLocale = locale;
   }
 
-  String? _test(T? value) {
+  String? _test(T? value, [Map<dynamic, dynamic>? ref]) {
     if (value == null && defaultValue != null) {
       value = defaultValue;
     }
@@ -45,7 +46,7 @@ class EzValidator<T> {
         return null;
       }
 
-      final result = validate(value);
+      final result = validate(value, ref);
       if (result != null) {
         return result;
       }

@@ -1,45 +1,55 @@
 import 'package:ez_validator/src/validator/ez_validator_builder.dart';
 
 extension NumValidatorExtensions<T> on EzValidator<T> {
+  /// Checks if the value is a minimum of [min]
+  /// [message] is the message to return if the validation fails
   EzValidator<T> min(num min, [String? message]) {
-    return addValidation((value) {
-      if (value is num) {
-        return value < min
-            ? message ?? EzValidator.globalLocale.min('$value', min, label)
+    return addValidation((v, [_]) {
+      if (v is num) {
+        return v < min
+            ? message ?? EzValidator.globalLocale.min('$v', min, label)
             : null;
       }
       return 'Invalid type for min comparison';
     });
   }
 
-  EzValidator<T> max(num max, [String? message]) => addValidation((value) {
-        if (value is num) {
-          return value > max
-              ? message ?? EzValidator.globalLocale.max('$value', max, label)
+  /// Checks if the value is a maximum of [max]
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> max(num max, [String? message]) => addValidation((v, [_]) {
+        if (v is num) {
+          return v > max
+              ? message ?? EzValidator.globalLocale.max('$v', max, label)
               : null;
         }
         return 'Invalid type for min comparison';
       });
 
-  EzValidator<T> positive([String? message]) => addValidation((value) {
-        if (value is num) {
-          return value < 0
-              ? message ?? EzValidator.globalLocale.positive('$value', label)
+  /// Checks if the value is between [min] and [max]
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> positive([String? message]) => addValidation((v, [_]) {
+        if (v is num) {
+          return v < 0
+              ? message ?? EzValidator.globalLocale.positive('$v', label)
               : null;
         }
         return 'Invalid type for min comparison';
       });
 
-  EzValidator<T> negative([String? message]) => addValidation((value) {
-        if (value is num) {
-          return value > 0
-              ? message ?? EzValidator.globalLocale.negative('$value', label)
+  /// Checks if the value is negative
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> negative([String? message]) => addValidation((v, [_]) {
+        if (v is num) {
+          return v > 0
+              ? message ?? EzValidator.globalLocale.negative('$v', label)
               : null;
         }
         return 'Invalid type for min comparison';
       });
 
-  EzValidator<T> number([String? message]) => addValidation((v) {
+  /// Checks if the value is a number
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> number([String? message]) => addValidation((v, [_]) {
         if (v is num) {
           return null;
         }
@@ -48,7 +58,9 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
             : message ?? EzValidator.globalLocale.number('$v', label);
       });
 
-  EzValidator<T> isInt([String? message]) => addValidation((v) {
+  /// Checks if the value is an integer
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> isInt([String? message]) => addValidation((v, [_]) {
         if (v is int) {
           return null;
         }
@@ -58,7 +70,9 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
             : message ?? EzValidator.globalLocale.isInt('$v', label);
       });
 
-  EzValidator<T> isDouble([String? message]) => addValidation((v) {
+  /// Checks if the value is a double
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> isDouble([String? message]) => addValidation((v, [_]) {
         if (v is double) {
           return null;
         }
@@ -76,7 +90,9 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
             : message ?? EzValidator.globalLocale.isDouble('$v', label);
       });
 
-  EzValidator<T> notNumber([String? message]) => addValidation((v) {
+  /// Checks if the value is not a number
+  /// [message] is the message to return if the validation fails
+  EzValidator<T> notNumber([String? message]) => addValidation((v, [_]) {
         if (v is num) {
           return message ?? EzValidator.globalLocale.notNumber('$v', label);
         }

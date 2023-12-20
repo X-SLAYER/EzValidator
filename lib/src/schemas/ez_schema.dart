@@ -26,7 +26,7 @@ class EzSchema {
     Map<String, dynamic> errors = {};
     _schema.forEach((key, value) {
       if (value is EzValidator) {
-        var error = value.build()(data[key]);
+        var error = value.build()(data[key], data);
         if (error != null) {
           errors[key] = error;
         }

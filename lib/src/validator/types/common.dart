@@ -1,14 +1,18 @@
 import 'package:ez_validator/src/validator/ez_validator_builder.dart';
 
 extension CommonValidatorExtensions<T> on EzValidator<T> {
+  /// add a validation to check if the value is null or empty
+  /// [message] is the message to return if the validation fails
   EzValidator<T> required([String? message]) => addValidation(
-        (v) => v == null || v.isNullOrEmpty
+        (v, [_]) => v == null || v.isNullOrEmpty
             ? message ?? EzValidator.globalLocale.required(label)
             : null,
       );
 
+  /// add a validation to check if the value is of type [type]
+  /// [message] is the message to return if the validation fails
   EzValidator<T> isType(Type type, [String? message]) => addValidation(
-        (v) {
+        (v, [_]) {
           if (type == Map && v is Map) {
             return null;
           }
@@ -21,8 +25,10 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
         },
       );
 
+  /// add a validation to check if the value is less than [minLength]
+  /// [message] is the message to return if the validation fails
   EzValidator<T> minLength(int minLength, [String? message]) => addValidation(
-        (v) {
+        (v, [_]) {
           if (v is String) {
             return v.length < minLength
                 ? message ??
@@ -47,8 +53,10 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
         },
       );
 
+  /// add a validation to check if the value is less than [maxLength]
+  /// [message] is the message to return if the validation fails
   EzValidator<T> maxLength(int maxLength, [String? message]) =>
-      addValidation((v) {
+      addValidation((v, [_]) {
         if (v is String) {
           return v.length > maxLength
               ? message ??
@@ -72,9 +80,20 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
         return null;
       });
 
+  /// add a custom validation
   EzValidator<T> addMethod(bool Function(T? v) validWhen, [String? message]) =>
       addValidation(
-          (v) => validWhen(v) ? null : message ?? 'Invalid Condition');
+          (v, [_]) => validWhen(v) ? null : message ?? 'Invalid Condition');
+
+  /// adjust the validation based on the value of another field
+  /// [key] is the name of the field to compare against
+  ///
+  /// [validator] is the validation to run if the condition is met
+  EzValidator<T> when(String key, ValidationCallback<T> validator) {
+    return addValidation((currentFieldValue, [ref]) {
+      return validator(currentFieldValue, ref);
+    });
+  }
 }
 
 extension OptionalValidation<T> on T? {
