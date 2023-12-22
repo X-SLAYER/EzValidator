@@ -44,6 +44,10 @@ class EzValidator<T> {
     globalLocale = locale;
   }
 
+  /// Global validators
+  String? validate(T? value, [Map<dynamic, dynamic>? entireData]) =>
+      _test(value, entireData);
+
   String? _test(T? value, [Map<dynamic, dynamic>? ref]) {
     if (transformationFunction != null && value != null) {
       value = transformationFunction!(value);
