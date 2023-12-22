@@ -161,6 +161,7 @@ If the input fails these validations, the corresponding error message is display
   - **`.maxLength(int maxLength, [String? message])`**: Ensures that the length of the value (String, List, or Map) does not exceed the specified `maxLength`.
   - **`.addMethod(bool Function(T? v) validWhen, [String? message])`**: Allows for the addition of custom validation logic. If the provided function `validWhen` returns `false`, the custom error message is returned.
   - **`.when(String key, ValidationCallback<T> validator)`**: Provides conditional validation based on the value of another field in the schema. The method accepts a `key`, which refers to another field in the schema, and a `validator`, which is a function that executes the validation logic. The `validator` function should return `null` if the validation passes or a custom error message if it fails. This method is particularly useful for scenarios where the validation of one field depends on the value of another field, such as confirming a password.
+  - **`.transform(T Function(T) transformFunction)`**: Applies a transformation function to the field's value before any validation is performed. The method takes a `transformFunction` which receives the current field value and returns a transformed value. This method is useful for preprocessing the data, such as trimming strings, converting types, or formatting values, before applying the validation rules.
 
 - ### String Validations
   
@@ -349,6 +350,45 @@ print(errors)
 
 // {address: {country: {code: The field is required, continent: {name: The field is required, code: The field is required}}}}
 
+
+```
+
+### Example Usage of `.when` and `.transform`
+
+This example demonstrates how to use the `.when` and `.transform` methods in `EzValidator` to perform conditional validations and pre-validate data transformations.
+
+``` dart
+
+void main() {
+  final EzSchema schema = EzSchema.shape({
+    // Use .transform to trim whitespace before validating the name
+    "name": EzValidator<String>()
+        .transform((value) => value.trim())
+        .minLength(3, "Name must be at least 3 characters long.")
+        .build(),
+
+    // Use .when to validate confirmPassword based on the password field
+    "password": EzValidator<String>()
+        .minLength(8, "Password must be at least 8 characters long.")
+        .build(),
+    "confirmPassword": EzValidator<String>()
+        .when(
+          "password",
+          (confirmValue, [entireData]) => confirmValue == entireData?["password"]
+              ? null
+              : "Passwords do not match",
+        )
+        .build(),
+  });
+
+  var result = schema.validateSync({
+    "name": "  John  ",
+    "password": "password123",
+    "confirmPassword": "password123",
+  });
+
+  print(result); // Should be empty if no validation errors
+}
 
 ```
 
