@@ -354,36 +354,29 @@ This example demonstrates how to use the `.when` and `.transform` methods in `Ez
 
 ```dart
 
-void main() {
-  final EzSchema schema = EzSchema.shape({
-    // Use .transform to trim whitespace before validating the name
-    "name": EzValidator<String>()
-        .transform((value) => value.trim())
-        .minLength(3, "Name must be at least 3 characters long.")
-        .build(),
+final EzSchema schema = EzSchema.shape({
+  // Use .transform to trim whitespace before validating the name
+  "name": EzValidator<String>()
+      .transform((value) => value.trim())
+      .minLength(3, "Name must be at least 3 characters long."),
 
-    // Use .when to validate confirmPassword based on the password field
-    "password": EzValidator<String>()
-        .minLength(8, "Password must be at least 8 characters long.")
-        .build(),
-    "confirmPassword": EzValidator<String>()
-        .when(
-          "password",
-          (confirmValue, [ref]) => confirmValue == ref?["password"]
-              ? null
-              : "Passwords do not match",
-        )
-        .build(),
-  });
+  // Use .when to validate confirmPassword based on the password field
+  "password": EzValidator<String>()
+      .minLength(8, "Password must be at least 8 characters long."),
+  "confirmPassword": EzValidator<String>().when(
+    "password",
+    (confirmValue, [ref]) =>
+        confirmValue == ref?["password"] ? null : "Passwords do not match",
+  )
+});
 
-  var result = schema.validateSync({
-    "name": "  John  ",
-    "password": "password123",
-    "confirmPassword": "password123",
-  });
+var result = schema.validateSync({
+  "name": "  John  ",
+  "password": "password123",
+  "confirmPassword": "password123",
+});
 
-  print(result); // Should be empty if no validation errors
-}
+print(result); // Should be empty if no validation errors
 
 ```
 
