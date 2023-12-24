@@ -40,9 +40,8 @@ final EzSchema userSchema = EzSchema.shape(
         .maxDate(DateTime(2025)),
   },
 );
-``` 
+```
 
- 
 ### Validating Data
 
 Use the `catchErrors` method of the schema to validate a data object. This method returns a map of validation errors, if any:
@@ -56,27 +55,25 @@ final errors = userSchema.catchErrors({
 
 print(errors);
 
-``` 
+```
 
 ### Understanding the Output
 
 - If there are validation errors, `errors` will contain a map of field names to error messages. For example:
-    
+
 ```dart
 {
   "password": "Minimum six characters, at least one letter, one number and one special character",
   "age": "The field must be greater than or equal to 18"
 }
 
-``` 
-    
+```
+
 - If the data object is valid according to the schema, `errors` will be an empty map (`{}`).
 
---------
-
+---
 
 Additionally, use the `validateSync` method to validate data and simultaneously retrieve the processed data along with any errors:
-
 
 ```dart
 final (data, errors) = userSchema.validateSync({
@@ -89,13 +86,13 @@ print(data);   // Processed data
 print(errors); // Validation errors
 
 ```
+
 ### Understanding the Output
 
 - If there are validation errors, the `errors` map will contain field names and their corresponding error messages.
 - If the data object passes all validations, `errors` will be an empty map (`{}`).
 - The `data` map returned by `validateSync` contains the processed data, which may include default values set by the schema.
 
- 
 ## Custom Validation with `addMethod`
 
 `EzValidator` also supports custom validation rules through the `addMethod` function. This feature allows you to define your own validation logic, making `EzValidator` highly adaptable to various unique use cases.
@@ -122,13 +119,13 @@ final errors = checkJson({
 print(errors); // Outputs the validation errors, if any
 
 ```
+
 If any of these checks fail, the corresponding error message is returned.
 
 ### Flexibility of Custom Validation
- 
+
 The `addMethod` function opens up endless possibilities for custom validation logic, allowing `EzValidator` to be tailored to your specific validation needs.
 
- 
 # Direct Use in Flutter Widgets
 
 `EzValidator` is designed to integrate smoothly with Flutter widgets, providing a straightforward way to add validation to user inputs. One common use case is within forms, where you can directly use `EzValidator` in form fields such as `TextFormField`.
@@ -147,6 +144,7 @@ TextFormField(
 ),
 
 ```
+
 If the input fails these validations, the corresponding error message is displayed under the `TextFormField`.
 
 # Validation Methods
@@ -160,9 +158,11 @@ If the input fails these validations, the corresponding error message is display
   - **`.minLength(int minLength, [String? message])`**: Checks that the length of the value (String, List, or Map) is not less than the specified `minLength`.
   - **`.maxLength(int maxLength, [String? message])`**: Ensures that the length of the value (String, List, or Map) does not exceed the specified `maxLength`.
   - **`.addMethod(bool Function(T? v) validWhen, [String? message])`**: Allows for the addition of custom validation logic. If the provided function `validWhen` returns `false`, the custom error message is returned.
+  - **`.when(String key, ValidationCallback<T> validator)`**: Provides conditional validation based on the value of another field in the schema. The method accepts a `key`, which refers to another field in the schema, and a `validator`, which is a function that executes the validation logic. The `validator` function should return `null` if the validation passes or a custom error message if it fails. This method is particularly useful for scenarios where the validation of one field depends on the value of another field, such as confirming a password.
+  - **`.transform(T Function(T) transformFunction)`**: Applies a transformation function to the field's value before any validation is performed. The method takes a `transformFunction` which receives the current field value and returns a transformed value. This method is useful for preprocessing the data, such as trimming strings, converting types, or formatting values, before applying the validation rules.
 
 - ### String Validations
-  
+
   - **`.email([String? message])`**: Validates if the value is a valid email address.
   - **`.phone([String? message])`**: Validates if the value is a valid phone number.
   - **`.ip([String? message])`**: Validates if the value is a correct IPv4 address.
@@ -172,9 +172,9 @@ If the input fails these validations, the corresponding error message is display
   - **`.lowerCase([String? message])`**: Checks if the value is in lowercase.
   - **`.upperCase([String? message])`**: Checks if the value is in uppercase.
   - **`.matches(RegExp reg, [String? message])`**: Validates if the value matches the provided regular expression pattern.
-  
+
 - ### Numerical Validations
-  
+
   - **`.min(num min, [String? message])`**: Validates if the numeric value is greater than or equal to `min`.
   - **`.max(num max, [String? message])`**: Validates if the numeric value is less than or equal to `max`.
   - **`.positive([String? message])`**: Validates if the numeric value is positive.
@@ -195,14 +195,10 @@ If the input fails these validations, the corresponding error message is display
   - **`.boolean([String? message])`**: Validates whether the value is a boolean (`true` or `false`). This method checks the data type of the value and ensures it is strictly a boolean.
 
 - ### List (Array) Validations
-  
+
   - **`.listOf(Type type, [String? message])`**: Validates that each element in the list is of the specified `type`. It iterates through the list and checks if each item matches the given type.
-      
   - **`.oneOf(List<T> items, [String? message])`**: Checks if the value is one of the specified items in the list. It is useful for ensuring a value is among a predefined set of options.
-      
   - **`.notOneOf(List<T> items, [String? message])`**: Ensures that the value is not one of the specified items in the list. This is the opposite of `.oneOf` and is used to exclude certain values.
-
-
 
 ## Using Custom Locales with `EzValidator`
 
@@ -229,10 +225,11 @@ class ArLocale implements EzLocale {
   @override
   String email(String v, [String? label]) =>
       '${label ?? 'الحقل'} ليس بريدًا إلكترونيًا صحيحًا';
-  
+
   // ... further implementations for other methods ...
 }
 ```
+
 **Set the Locale in `EzValidator`**: Configure `EzValidator` to use the `ArLocale`.
 
 ```dart
@@ -313,7 +310,7 @@ Validation
       },
     });
 
-  print(data); 
+  print(data);
 
 // Result of displayed data will contain country with default values
 // {
@@ -342,12 +339,44 @@ Validation
 //         },
 //     },
 // }
-// 
+//
 
 print(errors)
 
 // {address: {country: {code: The field is required, continent: {name: The field is required, code: The field is required}}}}
 
+
+```
+
+### Example Usage of `.when` and `.transform`
+
+This example demonstrates how to use the `.when` and `.transform` methods in `EzValidator` to perform conditional validations and pre-validate data transformations.
+
+```dart
+
+final EzSchema schema = EzSchema.shape({
+  // Use .transform to trim whitespace before validating the name
+  "name": EzValidator<String>()
+      .transform((value) => value.trim())
+      .minLength(3, "Name must be at least 3 characters long."),
+
+  // Use .when to validate confirmPassword based on the password field
+  "password": EzValidator<String>()
+      .minLength(8, "Password must be at least 8 characters long."),
+  "confirmPassword": EzValidator<String>().when(
+    "password",
+    (confirmValue, [ref]) =>
+        confirmValue == ref?["password"] ? null : "Passwords do not match",
+  )
+});
+
+var result = schema.validateSync({
+  "name": "  John  ",
+  "password": "password123",
+  "confirmPassword": "password123",
+});
+
+print(result); // Should be empty if no validation errors
 
 ```
 

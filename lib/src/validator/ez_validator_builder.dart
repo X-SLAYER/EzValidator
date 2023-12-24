@@ -3,7 +3,8 @@ import 'package:ez_validator/src/validator/ez_locale.dart';
 
 import 'ez_validator_locale.dart';
 
-typedef ValidationCallback<T> = String? Function(T? value);
+typedef ValidationCallback<T> = String? Function(T? value,
+    [Map<dynamic, dynamic>? ref]);
 
 class EzValidator<T> {
   EzValidator({
@@ -22,6 +23,14 @@ class EzValidator<T> {
   /// Overrides the key name which is used in error messages.
   final String? label;
 
+  /// transformation function
+  /// this function will be called before any validation
+  /// it can be used to transform the value before validation
+  /// for example: `trim` a string
+  /// or `parse` a string to a `DateTime`
+  /// or `cast` a `String` to `int` ....
+  T Function(T)? transformationFunction;
+
   final List<ValidationCallback<T>> validations = [];
   static EzLocale globalLocale = const DefaultLocale();
 
@@ -35,7 +44,11 @@ class EzValidator<T> {
     globalLocale = locale;
   }
 
-  String? _test(T? value) {
+  String? _test(T? value, [Map<dynamic, dynamic>? ref]) {
+    if (transformationFunction != null && value != null) {
+      value = transformationFunction!(value);
+    }
+
     if (value == null && defaultValue != null) {
       value = defaultValue;
     }
@@ -45,7 +58,7 @@ class EzValidator<T> {
         return null;
       }
 
-      final result = validate(value);
+      final result = validate(value, ref);
       if (result != null) {
         return result;
       }
