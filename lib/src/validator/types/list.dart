@@ -34,7 +34,8 @@ extension ListValidatorExtensions<T> on EzValidator<T> {
           : message ?? EzValidator.globalLocale.notOneOf(items, '$v', label));
 
   /// Define an array of [itemValidator] to validate each item in the array
-  EzValidator<List<T>> arrayOf(EzValidator<dynamic> itemValidator) =>
+  // ignore: avoid_shadowing_type_parameters
+  EzValidator<List<T>> arrayOf<T>(EzValidator<dynamic> itemValidator) =>
       EzValidator<List<T>>().addValidation((list, [entireData]) {
         if (list == null) {
           return null;

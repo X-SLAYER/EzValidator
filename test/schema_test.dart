@@ -89,6 +89,18 @@ void main() {
     }),
   });
 
+  final EzSchema schoolSchema = EzSchema.shape(
+    {
+      "subject": EzValidator<String>().required(),
+      "description": EzValidator<String>().required(),
+      "daysOfWeek": EzValidator<List<String>>(defaultValue: ['Monday'])
+          .required()
+          .arrayOf<String>(
+            EzValidator<String>().oneOf(['Monday', 'Tuesday']),
+          ),
+    },
+  );
+
   group('Schema Validation', () {
     test('Check schema results', () {
       final errors = ezSchema.catchErrors({
@@ -183,5 +195,25 @@ void main() {
       data['address']['country']['continent']['name'],
       equals('Continentia'),
     );
+  });
+
+  test('Schema with a list Validation', () {
+    final (_, errors) = schoolSchema.validateSync({
+      'subject': 'Math',
+      'description': 'Math description',
+      'daysOfWeek': ['Monday', 'Tuesday'],
+    });
+
+    expect(errors, isEmpty, reason: 'No validation errors expected');
+  });
+
+  test('List validation error', () {
+    final errors = schoolSchema.catchErrors({
+      'subject': 'Math',
+      'description': 'Math description',
+      'daysOfWeek': ['Monday', 'Tuesday', 'Wednesday', 6],
+    });
+
+    expect(errors, isNotEmpty, reason: 'Validation errors expected');
   });
 }
