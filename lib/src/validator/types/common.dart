@@ -1,4 +1,4 @@
-import 'package:ez_validator/src/validator/ez_validator_builder.dart';
+import '../../../ez_validator.dart';
 
 extension CommonValidatorExtensions<T> on EzValidator<T> {
   /// add a validation to check if the value is null or empty

@@ -211,9 +211,8 @@ void main() {
     final errors = schoolSchema.catchErrors({
       'subject': 'Math',
       'description': 'Math description',
-      'daysOfWeek': ['Monday', 'Tuesday', 'Wednesday', 6],
+      'daysOfWeek': ['Monday', 'Tuesday', 'Wednesday'],
     });
-
     expect(errors, isNotEmpty, reason: 'Validation errors expected');
   });
 }

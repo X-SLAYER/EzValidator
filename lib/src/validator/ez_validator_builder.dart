@@ -49,25 +49,29 @@ class EzValidator<T> {
       _test(value, entireData);
 
   String? _test(T? value, [Map<dynamic, dynamic>? ref]) {
-    if (transformationFunction != null && value != null) {
-      value = transformationFunction!(value);
-    }
-
-    if (value == null && defaultValue != null) {
-      value = defaultValue;
-    }
-
-    for (var validate in validations) {
-      if (optional && value.isNullOrEmpty) {
-        return null;
+    try {
+      if (transformationFunction != null && value != null) {
+        value = transformationFunction!(value);
       }
 
-      final result = validate(value, ref);
-      if (result != null) {
-        return result;
+      if (value == null && defaultValue != null) {
+        value = defaultValue;
       }
+
+      for (var validate in validations) {
+        if (optional && value.isNullOrEmpty) {
+          return null;
+        }
+
+        final result = validate(value, ref);
+        if (result != null) {
+          return result;
+        }
+      }
+      return null;
+    } catch (e) {
+      return e.toString();
     }
-    return null;
   }
 
   ValidationCallback<T> build() => _test;

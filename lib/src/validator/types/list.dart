@@ -35,8 +35,9 @@ extension ListValidatorExtensions<T> on EzValidator<T> {
 
   /// Define an array of [itemValidator] to validate each item in the array
   // ignore: avoid_shadowing_type_parameters
-  EzValidator<List<T>> arrayOf<T>(EzValidator<dynamic> itemValidator) =>
-      EzValidator<List<T>>().addValidation((list, [entireData]) {
+  EzValidator<List<T>> arrayOf<T>(EzValidator<T> itemValidator) {
+    return EzValidator<List<T>>().addValidation((list, [entireData]) {
+      try {
         if (list == null) {
           return null;
         }
@@ -47,5 +48,9 @@ extension ListValidatorExtensions<T> on EzValidator<T> {
           }
         }
         return null;
-      });
+      } catch (e) {
+        return e.toString();
+      }
+    });
+  }
 }

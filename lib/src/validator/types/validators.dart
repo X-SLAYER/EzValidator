@@ -4,3 +4,4 @@ export 'num.dart';
 export 'boolean.dart';
 export 'date.dart';
 export 'list.dart';
+export 'schema.dart';

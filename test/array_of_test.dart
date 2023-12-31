@@ -4,8 +4,12 @@ import 'package:test/test.dart';
 
 void main() {
   group('Array Validator Tests', () {
-    final validator = EzValidator().arrayOf(
+    final validator = EzValidator().arrayOf<dynamic>(
       EzValidator<num>().required().positive(),
+    );
+
+    final numString = EzValidator().arrayOf<dynamic>(
+      EzValidator<String>().required().positive(),
     );
 
     test('Valid array should pass validation', () {
@@ -25,6 +29,11 @@ void main() {
 
     test('Null array should pass validation', () {
       var result = validator.validate(null);
+      expect(result, isNull);
+    });
+
+    test('Num String array should pass validation', () {
+      var result = numString.validate(['1', '2', '3', '4', '5']);
       expect(result, isNull);
     });
 
