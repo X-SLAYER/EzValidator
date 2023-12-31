@@ -37,20 +37,22 @@ extension ListValidatorExtensions<T> on EzValidator<T> {
   // ignore: avoid_shadowing_type_parameters
   EzValidator<List<T>> arrayOf<T>(EzValidator<T> itemValidator) {
     return EzValidator<List<T>>().addValidation((list, [entireData]) {
-      try {
-        if (list == null) {
-          return null;
-        }
-        for (var item in list) {
-          var error = itemValidator.validate(item, entireData);
-          if (error != null) {
-            return error;
-          }
-        }
+      if (list == null) {
         return null;
-      } catch (e) {
-        return e.toString();
       }
+      List<dynamic> errorsList = [];
+      for (var i = 0; i < list.length; i++) {
+        var item = list[i];
+        var error = itemValidator.validate(item, entireData);
+
+        if (error != null) {
+          errorsList.add(error);
+        }
+      }
+      if (errorsList.isNotEmpty) {
+        return errorsList;
+      }
+      return null;
     });
   }
 }

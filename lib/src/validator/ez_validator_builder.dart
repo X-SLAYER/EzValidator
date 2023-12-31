@@ -3,8 +3,10 @@ import 'package:ez_validator/src/validator/ez_locale.dart';
 
 import 'ez_validator_locale.dart';
 
-typedef ValidationCallback<T> = String? Function(T? value,
-    [Map<dynamic, dynamic>? ref]);
+typedef ValidationCallback<T> = dynamic Function(
+  T? value, [
+  Map<dynamic, dynamic>? ref,
+]);
 
 class EzValidator<T> {
   EzValidator({
@@ -45,10 +47,10 @@ class EzValidator<T> {
   }
 
   /// Global validators
-  String? validate(T? value, [Map<dynamic, dynamic>? entireData]) =>
+  dynamic validate(T? value, [Map<dynamic, dynamic>? entireData]) =>
       _test(value, entireData);
 
-  String? _test(T? value, [Map<dynamic, dynamic>? ref]) {
+  dynamic _test(T? value, [Map<dynamic, dynamic>? ref]) {
     try {
       if (transformationFunction != null && value != null) {
         value = transformationFunction!(value);

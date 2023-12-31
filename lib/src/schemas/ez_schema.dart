@@ -23,7 +23,7 @@ class EzSchema {
   Map<dynamic, dynamic> catchErrors(Map<dynamic, dynamic> form) {
     final data = _fillSchemaIfNeeded(form);
 
-    Map<String, dynamic> errors = {};
+    Map<dynamic, dynamic> errors = {};
     _schema.forEach((key, value) {
       if (value is EzValidator) {
         var error = value.build()(data[key], data);
@@ -52,19 +52,19 @@ class EzSchema {
     return (data, errors);
   }
 
-  Map<String, dynamic> _fillSchemaIfNeeded(Map<dynamic, dynamic> form) {
-    final data = Map<String, dynamic>.from(form);
+  Map<dynamic, dynamic> _fillSchemaIfNeeded(Map<dynamic, dynamic> form) {
+    final data = Map<dynamic, dynamic>.from(form);
 
     if (fillSchema ?? false) {
       _schema.forEach((key, value) {
         if (value is EzValidator) {
           data[key] ??= value.defaultValue;
         } else if (value is EzSchema) {
-          if (!form.containsKey(key) || form[key] is! Map<String, dynamic>) {
+          if (!form.containsKey(key) || form[key] is! Map<dynamic, dynamic>) {
             data[key] = value._populateDefaultValues();
           } else {
             data[key] =
-                value._fillSchemaIfNeeded(form[key] as Map<String, dynamic>);
+                value._fillSchemaIfNeeded(form[key] as Map<dynamic, dynamic>);
           }
         }
       });

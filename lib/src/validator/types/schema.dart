@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_shadowing_type_parameters
 
-import 'dart:convert';
-
 import '../../../ez_validator.dart';
 
 extension SchemaValidation<T> on EzValidator<T> {
@@ -36,13 +34,26 @@ extension SchemaValidation<T> on EzValidator<T> {
 
   EzValidator<T> schema<T>(EzSchema schema) =>
       EzValidator<T>().addValidation((value, [entireData]) {
-        if (value is Map<String, dynamic>) {
+        if (value is List<Map<String, dynamic>>) {
+          List<Map<dynamic, dynamic>> errorsList = [];
+
+          for (var item in value) {
+            var errors = schema.catchErrors(item);
+            if (errors.isNotEmpty) {
+              errorsList.add(errors);
+            }
+          }
+
+          if (errorsList.isNotEmpty) {
+            return errorsList;
+          }
+        } else if (value is Map<String, dynamic>) {
           var errors = schema.catchErrors(value);
           if (errors.isNotEmpty) {
-            return jsonEncode(errors);
+            return errors;
           }
         } else {
-          return 'Invalid type, expected Map<String, dynamic>';
+          return 'Invalid type for schema validation';
         }
         return null;
       });

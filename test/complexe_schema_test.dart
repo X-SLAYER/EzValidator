@@ -88,7 +88,7 @@ void main() {
         {
           "departmentName": "Engineering",
           "employees": [
-            {"name": "John Doe", "role": "Developer"},
+            {"name": "John Doe"},
             {"name": "Jane Smith"},
           ],
         },
