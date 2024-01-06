@@ -10,6 +10,13 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
             ? message ?? EzValidator.globalLocale.min('$v', min, label)
             : null;
       }
+
+      if (v is String) {
+        return num.tryParse(v) != null && num.parse(v) < min
+            ? message ?? EzValidator.globalLocale.min('$v', min, label)
+            : null;
+      }
+
       return 'Invalid type for min comparison';
     });
   }
@@ -22,6 +29,13 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
               ? message ?? EzValidator.globalLocale.max('$v', max, label)
               : null;
         }
+
+        if (v is String) {
+          return num.tryParse(v) != null && num.parse(v) > max
+              ? message ?? EzValidator.globalLocale.max('$v', max, label)
+              : null;
+        }
+
         return 'Invalid type for min comparison';
       });
 
@@ -33,6 +47,13 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
               ? message ?? EzValidator.globalLocale.positive('$v', label)
               : null;
         }
+
+        if (v is String) {
+          return num.tryParse(v) != null && num.parse(v) < 0
+              ? message ?? EzValidator.globalLocale.positive('$v', label)
+              : null;
+        }
+
         return 'Invalid type for min comparison';
       });
 
@@ -41,6 +62,12 @@ extension NumValidatorExtensions<T> on EzValidator<T> {
   EzValidator<T> negative([String? message]) => addValidation((v, [_]) {
         if (v is num) {
           return v > 0
+              ? message ?? EzValidator.globalLocale.negative('$v', label)
+              : null;
+        }
+
+        if (v is String) {
+          return num.tryParse(v) != null && num.parse(v) > 0
               ? message ?? EzValidator.globalLocale.negative('$v', label)
               : null;
         }

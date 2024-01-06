@@ -160,6 +160,8 @@ If the input fails these validations, the corresponding error message is display
   - **`.addMethod(bool Function(T? v) validWhen, [String? message])`**: Allows for the addition of custom validation logic. If the provided function `validWhen` returns `false`, the custom error message is returned.
   - **`.when(String key, ValidationCallback<T> validator)`**: Provides conditional validation based on the value of another field in the schema. The method accepts a `key`, which refers to another field in the schema, and a `validator`, which is a function that executes the validation logic. The `validator` function should return `null` if the validation passes or a custom error message if it fails. This method is particularly useful for scenarios where the validation of one field depends on the value of another field, such as confirming a password.
   - **`.transform(T Function(T) transformFunction)`**: Applies a transformation function to the field's value before any validation is performed. The method takes a `transformFunction` which receives the current field value and returns a transformed value. This method is useful for preprocessing the data, such as trimming strings, converting types, or formatting values, before applying the validation rules.
+  - **`.arrayOf<EzValidator<T>>(EzValidator<T> itemValidator)`**: when you have a list of items that need to be individually validated. This method is ideal for scenarios like validating a list of user inputs, where each input must pass certain validation criteria.
+  - **`.schema<EzSchema>(EzSchema schema)`**: is ideal for nested or complex data structures where multiple fields need to be validated in relation to each other. It's particularly useful in cases where you need to enforce a specific data format, such as validating JSON objects, complex forms, or data models.
 
 - ### String Validations
 
@@ -377,6 +379,43 @@ var result = schema.validateSync({
 });
 
 print(result); // Should be empty if no validation errors
+
+```
+
+### Example Usage of `.arrayOf` and `.schema`
+
+This example shows how to use `.arrayOf` for validating a list of items and `.schema` for validating nested objects within a schema.
+
+```dart
+// Define a schema for individual student validation
+final EzSchema studentSchema = EzSchema.shape({
+  "name": EzValidator<String>().required(),
+  "age": EzValidator<int>().min(18, "Students must be at least 18 years old."),
+});
+
+// Validator for validating a list of students
+final EzValidator<List<Map<String, dynamic>>> studentsListValidator =
+  EzValidator<List<Map<String, dynamic>>>()
+    .required()
+    .arrayOf<Map<String, dynamic>>(
+      EzValidator<Map<String, dynamic>>().schema(studentSchema),
+    );
+
+// Define a schema for a classroom, which includes a list of students
+final EzSchema classroomSchema = EzSchema.shape({
+  "className": EzValidator<String>().required(),
+  "students": studentsListValidator,
+});
+
+var result = classroomSchema.validateSync({
+  "className": "Advanced Mathematics",
+  "students": [
+    {"name": "John Doe", "age": 20},
+    {"name": "Jane Smith", "age": 17}, // ---> This will cause a validation error
+  ],
+});
+
+print(result.$2); // {students: {"age":"Students must be at least 18 years old."}}
 
 ```
 
