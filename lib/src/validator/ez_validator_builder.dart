@@ -1,6 +1,7 @@
 import 'package:ez_validator/src/validator/types/validators.dart';
 import 'package:ez_validator/src/validator/ez_locale.dart';
 
+import '../common/schema_value.dart';
 import 'ez_validator_locale.dart';
 
 typedef ValidationCallback<T> = dynamic Function(
@@ -8,7 +9,7 @@ typedef ValidationCallback<T> = dynamic Function(
   Map<dynamic, dynamic>? ref,
 ]);
 
-class EzValidator<T> {
+class EzValidator<T> extends SchemaValue {
   EzValidator({
     this.optional = false,
     this.defaultValue,

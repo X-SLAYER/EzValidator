@@ -1,7 +1,8 @@
+import '../common/schema_value.dart';
 import '../validator/ez_validator_builder.dart';
 
-class EzSchema {
-  final Map<String, dynamic> _schema;
+class EzSchema extends SchemaValue {
+  final Map<String, SchemaValue> _schema;
 
   /// when it's true the form will be filled
   /// with keys from the schema with empty string.
@@ -11,10 +12,10 @@ class EzSchema {
   EzSchema.shape(this._schema, {this.fillSchema = true});
 
   /// access to the values of the schema
-  Map<String, dynamic> get schema => _schema;
+  Map<String, SchemaValue> get schema => _schema;
 
   /// get the values of the schema with specific key
-  dynamic operator [](String key) => _schema[key];
+  SchemaValue operator [](String key) => _schema[key]!;
 
   /// validate the values you have sent and return a [Map]
   /// with errors. each error will have the key from form keys
