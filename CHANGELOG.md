@@ -46,3 +46,6 @@
 ## 0.3.2
   - **`.arrayOf<EzValidator<T>>(EzValidator<T> itemValidator)`**: when you have a list of items that need to be individually validated. This method is ideal for scenarios like validating a list of user inputs, where each input must pass certain validation criteria.
   - **`.schema<EzSchema>(EzSchema schema)`**: is ideal for nested or complex data structures where multiple fields need to be validated in relation to each other. It's particularly useful in cases where you need to enforce a specific data format, such as validating JSON objects, complex forms, or data models.
+
+## 0.3.3
+- Improved Type Safety in `EzSchema` 
