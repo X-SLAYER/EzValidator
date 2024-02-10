@@ -78,7 +78,7 @@ class EzSchema extends SchemaValue {
     Map<String, dynamic> defaults = {};
     _schema.forEach((key, value) {
       if (value is EzValidator) {
-        defaults[key] = value.optional ? null : value.defaultValue;
+        defaults[key] = value.defaultValue;
       } else if (value is EzSchema) {
         defaults[key] = value._populateDefaultValues();
       }
