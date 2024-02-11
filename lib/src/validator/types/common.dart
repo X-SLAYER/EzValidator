@@ -89,7 +89,7 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
   /// [key] is the name of the field to compare against
   ///
   /// [validator] is the validation to run if the condition is met
-  EzValidator<T> when(String key, ValidationCallback<T> validator) {
+  EzValidator<T> when(ValidationCallback<T> validator) {
     return addValidation((currentFieldValue, [ref]) {
       return validator(currentFieldValue, ref);
     });

@@ -5,11 +5,9 @@ void main() {
   group('Siblings Tests', () {
     final EzSchema schema = EzSchema.shape({
       "password": EzValidator<String>().required().minLength(8),
-      "confirmPassword": EzValidator<String>().required().when(
-          "password",
-          (confirmValue, [ref]) => confirmValue == ref?["password"]
-              ? null
-              : "Passwords do not match"),
+      "confirmPassword": EzValidator<String>().required().when((confirmValue,
+              [ref]) =>
+          confirmValue == ref?["password"] ? null : "Passwords do not match"),
     });
 
     test('Matching passwords should pass validation', () {
@@ -56,7 +54,6 @@ void main() {
       final optionalSchema = EzSchema.shape({
         "password": EzValidator<String>().required().minLength(8),
         "confirmPassword": EzValidator<String?>(optional: true).when(
-            "password",
             (confirmValue, [ref]) => confirmValue == ref?["password"]
                 ? null
                 : "Passwords do not match"),
@@ -73,7 +70,6 @@ void main() {
         "user": EzSchema.shape({
           "password": EzValidator<String>().required().minLength(8),
           "confirmPassword": EzValidator<String>().required().when(
-              "password",
               (confirmValue, [ref]) => confirmValue == ref?["password"]
                   ? null
                   : "Passwords do not match"),
