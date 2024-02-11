@@ -86,12 +86,44 @@ extension CommonValidatorExtensions<T> on EzValidator<T> {
           (v, [_]) => validWhen(v) ? null : message ?? 'Invalid Condition');
 
   /// adjust the validation based on the value of another field
-  /// [key] is the name of the field to compare against
   ///
   /// [validator] is the validation to run if the condition is met
   EzValidator<T> when(ValidationCallback<T> validator) {
     return addValidation((currentFieldValue, [ref]) {
       return validator(currentFieldValue, ref);
+    });
+  }
+
+  /// Dynamically adjust field validation based on another field's value.
+  ///
+  /// [condition] is a function that takes the value of the field specified by [ref] and evaluates it to return a boolean. If `true`, [then] is applied; if `false`, [orElse] is applied.
+  ///
+  /// [then] specifies the `EzValidator` instance to use for validation when [condition] evaluates to `true`. It defines how the field should be validated if the condition is met.
+  ///
+  /// [orElse] specifies the `EzValidator` instance to use for validation when [condition] evaluates to `false`. It provides an alternative validation logic for when the condition is not met.
+  ///
+  EzValidator<T> dependsOn({
+    required bool Function(Map<dynamic, dynamic>? ref) condition,
+    required EzValidator<T> then,
+    EzValidator<T>? orElse,
+  }) {
+    return addValidation((value, [formData]) {
+      if (condition(formData)) {
+        for (var validation in then.validations) {
+          final error = validation(value, formData);
+          if (error != null) {
+            return error;
+          }
+        }
+      } else if (orElse != null) {
+        for (var validation in orElse.validations) {
+          final error = validation(value, formData);
+          if (error != null) {
+            return error;
+          }
+        }
+      }
+      return null;
     });
   }
 
