@@ -158,7 +158,8 @@ If the input fails these validations, the corresponding error message is display
   - **`.minLength(int minLength, [String? message])`**: Checks that the length of the value (String, List, or Map) is not less than the specified `minLength`.
   - **`.maxLength(int maxLength, [String? message])`**: Ensures that the length of the value (String, List, or Map) does not exceed the specified `maxLength`.
   - **`.addMethod(bool Function(T? v) validWhen, [String? message])`**: Allows for the addition of custom validation logic. If the provided function `validWhen` returns `false`, the custom error message is returned.
-  - **`.when(String key, ValidationCallback<T> validator)`**: Provides conditional validation based on the value of another field in the schema. The method accepts a `key`, which refers to another field in the schema, and a `validator`, which is a function that executes the validation logic. The `validator` function should return `null` if the validation passes or a custom error message if it fails. This method is particularly useful for scenarios where the validation of one field depends on the value of another field, such as confirming a password.
+  - **`.when(ValidationCallback<T> validator)`**: Provides conditional validation based on the value of another field in the schema. The method accepts a `ref`, which refers to another field in the schema, and a `validator`, which is a function that executes the validation logic. The `validator` function should return `null` if the validation passes or a custom error message if it fails. This method is particularly useful for scenarios where the validation of one field depends on the value of another field, such as confirming a password.
+  - **`.dependsOn({required bool Function(Map<dynamic, dynamic>? ref) condition, required EzValidator<T> then, EzValidator<T>? orElse})`**: Enables conditional validation based on the state of other fields within the same schema. This method requires a `condition` function, which evaluates the schema's current values and decides which validation to apply based on its return value. If the condition is `true`, the validation defined in `then` is applied; otherwise, the validation in `orElse` (if provided) is applied. This is especially useful for cases where the requirement for a field is dependent on another field's value, offering a flexible way to implement complex validation logic within your schema.
   - **`.transform(T Function(T) transformFunction)`**: Applies a transformation function to the field's value before any validation is performed. The method takes a `transformFunction` which receives the current field value and returns a transformed value. This method is useful for preprocessing the data, such as trimming strings, converting types, or formatting values, before applying the validation rules.
   - **`.arrayOf<EzValidator<T>>(EzValidator<T> itemValidator)`**: when you have a list of items that need to be individually validated. This method is ideal for scenarios like validating a list of user inputs, where each input must pass certain validation criteria.
   - **`.schema<EzSchema>(EzSchema schema)`**: is ideal for nested or complex data structures where multiple fields need to be validated in relation to each other. It's particularly useful in cases where you need to enforce a specific data format, such as validating JSON objects, complex forms, or data models.
@@ -350,7 +351,7 @@ print(errors)
 
 ```
 
-### Example Usage of `.when` and `.transform`
+### Example Usage of `.when` and `.transform` and `.dependsOn`
 
 This example demonstrates how to use the `.when` and `.transform` methods in `EzValidator` to perform conditional validations and pre-validate data transformations.
 
@@ -379,6 +380,26 @@ var result = schema.validateSync({
 });
 
 print(result); // Should be empty if no validation errors
+
+```
+
+```dart
+  /// Use .dependsOn to dynamically adjust field validation based on another field's value.
+  final EzSchema carValidationSchema = EzSchema.shape({
+    "car_type": EzValidator<CarType>(defaultValue: CarType.suv).required(),
+    "passangers_number": EzValidator<int>().dependsOn(
+      condition: (ref) => ref!["car_type"] == CarType.suv,
+      then: EzValidator<int>().required().max(6, 'Max 6 passangers'),
+      orElse: EzValidator<int>().required().max(4, 'Max 4 passangers'),
+    ),
+  });
+
+  final errors = carValidationSchema.catchErrors({
+    "car_type": CarType.suv,
+    "passangers_number": 7,
+  });
+
+  print(errors); // {'passangers_number' : 'Max 6 passangers'}
 
 ```
 
