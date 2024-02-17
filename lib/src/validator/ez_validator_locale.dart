@@ -1,5 +1,6 @@
 abstract class EzLocale {
-  String name();
+  String get name;
+  String get unknownFieldMessage;
   String required([String? label]);
   String minLength(String v, int n, [String? label]);
   String min(String v, num n, [String? label]);

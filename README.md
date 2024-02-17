@@ -440,6 +440,34 @@ print(result.$2); // {students: {"age":"Students must be at least 18 years old."
 
 ```
 
+### Example Usage of `noUnknown` in the `.schema`
+
+```dart
+
+final EzSchema strictSchema = EzSchema.shape(
+  {
+    'email': EzValidator<String>().required().email(),
+    'password': EzValidator<String>().required(),
+    'username': EzValidator<String>().required(),
+  },
+  noUnknown: true, // Disallow unknown fields
+  fillSchema: false, // Do not fill missing fields
+);
+
+final Map<String, dynamic> dataWithUnknown = {
+  'email': 'test@email.com',
+  'password': 'password',
+  'age': 30, // Unknown field
+};
+
+final (_, errors) = strictSchema.validateSync(dataWithUnknown);
+
+print(errors) // {age: is not defined in the schema} 
+
+
+
+```
+
 ## ShowCase
 
 | with default locale                                                                                                                    | with French locale                                                                                                                     |
