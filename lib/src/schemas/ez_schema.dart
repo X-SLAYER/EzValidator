@@ -2,14 +2,25 @@ import '../common/schema_value.dart';
 import '../validator/ez_validator_builder.dart';
 
 class EzSchema extends SchemaValue {
+  EzSchema.shape(
+    this._schema, {
+    this.fillSchema = true,
+    this.noUnknown = false,
+  });
+
   final Map<String, SchemaValue> _schema;
 
   /// when it's true the form will be filled
+  ///
   /// with keys from the schema with empty string.
+  ///
   /// fillSchema is [True] by default
   final bool? fillSchema;
 
-  EzSchema.shape(this._schema, {this.fillSchema = true});
+  /// Disallow unknown fields
+  ///
+  /// noUnknown is [False] by default
+  final bool noUnknown;
 
   /// access to the values of the schema
   Map<String, SchemaValue> get schema => _schema;
@@ -38,6 +49,14 @@ class EzSchema extends SchemaValue {
         }
       }
     });
+
+    if (noUnknown) {
+      for (var key in form.keys) {
+        if (!_schema.containsKey(key)) {
+          errors[key] = EzValidator.globalLocale.unknownFieldMessage;
+        }
+      }
+    }
 
     return errors;
   }

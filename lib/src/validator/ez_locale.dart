@@ -4,7 +4,10 @@ class DefaultLocale implements EzLocale {
   const DefaultLocale();
 
   @override
-  String name() => 'en';
+  String get name => 'default';
+
+  @override
+  String get unknownFieldMessage => 'is not defined in the schema';
 
   @override
   String minLength(String v, int n, [String? label]) =>

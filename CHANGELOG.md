@@ -66,3 +66,8 @@
 
 - Remove unused key in the `.when` method
 - Add `.dependsOn`: that enables conditional validation based on the state of other fields within the same schema.
+-
+
+## 0.3.5
+
+- Add `noUnknown`: Validate that the data values only contains keys specified in the schema
