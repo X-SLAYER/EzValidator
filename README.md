@@ -163,6 +163,7 @@ If the input fails these validations, the corresponding error message is display
   - **`.transform(T Function(T) transformFunction)`**: Applies a transformation function to the field's value before any validation is performed. The method takes a `transformFunction` which receives the current field value and returns a transformed value. This method is useful for preprocessing the data, such as trimming strings, converting types, or formatting values, before applying the validation rules.
   - **`.arrayOf<EzValidator<T>>(EzValidator<T> itemValidator)`**: when you have a list of items that need to be individually validated. This method is ideal for scenarios like validating a list of user inputs, where each input must pass certain validation criteria.
   - **`.schema<EzSchema>(EzSchema schema)`**: is ideal for nested or complex data structures where multiple fields need to be validated in relation to each other. It's particularly useful in cases where you need to enforce a specific data format, such as validating JSON objects, complex forms, or data models.
+  - **`.union(List<EzValidator> validators)`**: Used for composing "OR" types by combining multiple validators into a union
 
 - ### String Validations
 
@@ -351,7 +352,7 @@ print(errors)
 
 ```
 
-### Example Usage of `.when` and `.transform` and `.dependsOn`
+### Example Usage of `.when` and `.transform` and `.dependsOn` and `.union`
 
 This example demonstrates how to use the `.when` and `.transform` methods in `EzValidator` to perform conditional validations and pre-validate data transformations.
 
@@ -400,6 +401,20 @@ print(result); // Should be empty if no validation errors
   });
 
   print(errors); // {'passangers_number' : 'Max 6 passangers'}
+
+```
+
+```dart
+  /// Use .union to compose "OR" types.
+  final schema = EzSchema.shape({
+    'mixedField': EzValidator().union([
+      EzValidator<String>().isType(String),
+      EzValidator<num>().isType(num)
+    ])
+  });
+
+  schema.catchErrors({'mixedField': 'test'}) // passed
+  schema.catchErrors({'mixedField': true}) // not passed
 
 ```
 
