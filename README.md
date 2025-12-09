@@ -418,6 +418,39 @@ print(result); // Should be empty if no validation errors
 
 ```
 
+### Getting Transformed Values
+
+```dart
+final validator = EzValidator<String>()
+    .transform((value) => value.trim())
+    .minLength(3)
+    .build(applyTransform: true);
+
+final result = validator("  hello  ");
+// result = "hello" (transformed value)
+
+final error = validator("  a  ");
+// error = "Input must be at least 3 characters..." (error message)
+```
+
+```dart
+  final schema = EzSchema.shape(
+    {
+      'name': Ez<String>().transform((v) => v.length().toString()).minLength(3),
+      'age': Ez<int>().required(),
+    },
+    applyTransform: true,
+  );
+
+  final (data, errors) = schema.validateSync({
+    'name': 'Ehab',
+    'age': 25,
+  });
+
+  print(data);
+// print => {"name": "4" , "age": 25}
+```
+
 ### Example Usage of `.arrayOf` and `.schema`
 
 This example shows how to use `.arrayOf` for validating a list of items and `.schema` for validating nested objects within a schema.
