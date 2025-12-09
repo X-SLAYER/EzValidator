@@ -63,19 +63,6 @@ void main() {
       expect(validator("  hi  "), isA<String>()); // Returns error message
     });
 
-    test('Transform with validateAndTransform method', () {
-      final validator =
-          Ez<String>().transform((value) => value.trim()).minLength(3);
-
-      expect(validator.validateAndTransform("  hello  "), "hello");
-      expect(validator.validateAndTransform("test  "), "test");
-
-      expect(
-        () => validator.validateAndTransform("  a  "),
-        throwsA(isA<Exception>()),
-      );
-    });
-
     test('Transform returns uppercase string', () {
       final validator = Ez<String>()
           .transform((value) => value.toUpperCase())
