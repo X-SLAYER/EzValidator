@@ -5,9 +5,9 @@ import 'package:ez_validator/ez_validator.dart';
 void main() {
   group('UnionValidator Tests', () {
     test('should validate basic string or number union', () {
-      final validator = EzValidator().union([
-        EzValidator<String>().isType(String),
-        EzValidator<num>().isType(num)
+      final validator = Ez().union([
+        Ez<String>().isType(String),
+        Ez<num>().isType(num),
       ]);
 
       expect(validator.validate('test'), isNull);
@@ -18,9 +18,9 @@ void main() {
     });
 
     test('should work with complex string validations', () {
-      final validator = EzValidator().union([
-        EzValidator<String>().isType(String).minLength(3).maxLength(10),
-        EzValidator<num>().isType(num)
+      final validator = Ez().union([
+        Ez<String>().isType(String).minLength(3).maxLength(10),
+        Ez<num>().isType(num)
       ]);
 
       expect(validator.validate('test'), isNull);
@@ -30,10 +30,8 @@ void main() {
     });
 
     test('should validate with additional constraints after union', () {
-      final validator = EzValidator().union([
-        EzValidator<String>().isType(String),
-        EzValidator<num>().isType(num)
-      ]).required();
+      final validator = Ez().union(
+          [Ez<String>().isType(String), Ez<num>().isType(num)]).required();
 
       expect(validator.validate(null), isNotNull);
       expect(validator.validate(''), isNotNull);
@@ -43,10 +41,8 @@ void main() {
 
     test('should work within EzSchema', () {
       final schema = EzSchema.shape({
-        'mixedField': EzValidator().union([
-          EzValidator<String>().isType(String),
-          EzValidator<num>().isType(num)
-        ])
+        'mixedField':
+            Ez().union([Ez<String>().isType(String), Ez<num>().isType(num)])
       });
 
       expect(schema.catchErrors({'mixedField': 'test'}), isEmpty);
@@ -55,12 +51,9 @@ void main() {
     });
 
     test('should validate nested unions', () {
-      final validator = EzValidator().union([
-        EzValidator().union([
-          EzValidator<String>().isType(String),
-          EzValidator<num>().isType(num)
-        ]),
-        EzValidator<bool>().isType(bool)
+      final validator = Ez().union([
+        Ez().union([Ez<String>().isType(String), Ez<num>().isType(num)]),
+        Ez<bool>().isType(bool)
       ]);
 
       expect(validator.validate('test'), isNull);
@@ -70,9 +63,9 @@ void main() {
     });
 
     test('should validate with type-specific validations', () {
-      final validator = EzValidator().union([
-        EzValidator<String>().isType(String).email(),
-        EzValidator<num>()
+      final validator = Ez().union([
+        Ez<String>().isType(String).email(),
+        Ez<num>()
             .isType(num)
             .addMethod((v) => (v as num) > 0, 'Must be positive')
       ]);
@@ -85,15 +78,15 @@ void main() {
 
     test('should handle empty validator list', () {
       expect(
-        () => EzValidator().union([]),
+        () => Ez().union([]),
         throwsA(isA<AssertionError>()),
       );
     });
 
     test('should validate with custom transform functions', () {
-      final validator = EzValidator().union([
-        EzValidator<String>().isType(String).transform((v) => v.toLowerCase()),
-        EzValidator<num>().isType(num)
+      final validator = Ez().union([
+        Ez<String>().isType(String).transform((v) => v.toLowerCase()),
+        Ez<num>().isType(num)
       ]);
 
       expect(validator.validate('TEST'), isNull);
@@ -102,11 +95,11 @@ void main() {
 
     test('should work with dependsOn validation', () {
       final schema = EzSchema.shape({
-        'type': EzValidator<String>().required(),
-        'value': EzValidator().union([
-          EzValidator<String>().isType(String),
-          EzValidator<num>().isType(num),
-          EzValidator<List<String>>().isType(List<String>)
+        'type': Ez<String>().required(),
+        'value': Ez().union([
+          Ez<String>().isType(String),
+          Ez<num>().isType(num),
+          Ez<List<String>>().isType(List<String>)
         ])
       });
 

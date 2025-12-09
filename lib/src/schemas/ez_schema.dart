@@ -6,6 +6,7 @@ class EzSchema extends SchemaValue {
     this._schema, {
     this.fillSchema = true,
     this.noUnknown = false,
+    this.applyTransform = false,
   });
 
   final Map<String, SchemaValue> _schema;
@@ -21,6 +22,12 @@ class EzSchema extends SchemaValue {
   ///
   /// noUnknown is [False] by default
   final bool noUnknown;
+
+  /// Apply transformations to the data
+  ///
+  /// When true, the validated data will contain transformed values
+  /// applyTransform is [False] by default
+  final bool applyTransform;
 
   /// access to the values of the schema
   Map<String, SchemaValue> get schema => _schema;
@@ -38,9 +45,19 @@ class EzSchema extends SchemaValue {
     Map<dynamic, dynamic> errors = {};
     _schema.forEach((key, value) {
       if (value is EzValidator) {
-        var error = value.build()(data[key], data);
-        if (error != null) {
-          errors[key] = error;
+        var result =
+            value.build(applyTransform: applyTransform)(data[key], data);
+        if (applyTransform) {
+          // When applying transform, result is either the transformed value or error string
+          if (result is String) {
+            errors[key] = result;
+          }
+          // If no error, the result is the transformed value (handled in validateSync)
+        } else {
+          // Normal mode: result is null or error string
+          if (result != null) {
+            errors[key] = result;
+          }
         }
       } else if (value is EzSchema) {
         var nestedErrors = value.catchErrors(data[key] ?? {});
@@ -64,12 +81,50 @@ class EzSchema extends SchemaValue {
   /// validate the values you have sent and return a [Map]
   ///
   /// It will return a `Map` with errors and the data
+  /// When applyTransform is true, data will contain transformed values
   (Map<dynamic, dynamic> data, Map<dynamic, dynamic> errors) validateSync(
     Map<dynamic, dynamic> form,
   ) {
     final data = _fillSchemaIfNeeded(form);
-    final errors = catchErrors(data);
-    return (data, errors);
+
+    if (applyTransform) {
+      // Apply transformations and collect both data and errors
+      Map<dynamic, dynamic> transformedData = Map<dynamic, dynamic>.from(data);
+      Map<dynamic, dynamic> errors = {};
+
+      _schema.forEach((key, value) {
+        if (value is EzValidator) {
+          var result = value.validate(data[key], data);
+          // Check if validation passed
+          if (result == null) {
+            // No error, get transformed value
+            transformedData[key] = value.applyTransformation(data[key]);
+          } else {
+            // It's an error
+            errors[key] = result;
+          }
+        } else if (value is EzSchema) {
+          var (nestedData, nestedErrors) = value.validateSync(data[key] ?? {});
+          transformedData[key] = nestedData;
+          if (nestedErrors.isNotEmpty) {
+            errors[key] = nestedErrors;
+          }
+        }
+      });
+
+      if (noUnknown) {
+        for (var key in form.keys) {
+          if (!_schema.containsKey(key)) {
+            errors[key] = EzValidator.globalLocale.unknownFieldMessage;
+          }
+        }
+      }
+
+      return (transformedData, errors);
+    } else {
+      final errors = catchErrors(data);
+      return (data, errors);
+    }
   }
 
   Map<dynamic, dynamic> _fillSchemaIfNeeded(Map<dynamic, dynamic> form) {

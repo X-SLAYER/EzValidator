@@ -77,5 +77,47 @@ class EzValidator<T> extends SchemaValue {
     }
   }
 
-  ValidationCallback<T> build() => _test;
+  /// Builds a function that validates and returns transformed value or error
+  /// Returns transformed value on success, error string on failure
+  dynamic Function(T?, [Map<dynamic, dynamic>?]) _buildWithTransform() {
+    return (T? value, [Map<dynamic, dynamic>? ref]) {
+      final error = _test(value, ref);
+      if (error != null) {
+        return error;
+      }
+
+      // Apply transformation
+      if (transformationFunction != null && value != null) {
+        value = transformationFunction!(value);
+      }
+
+      if (value == null && defaultValue != null) {
+        return defaultValue;
+      }
+
+      return value;
+    };
+  }
+
+  ValidationCallback<T> build({bool applyTransform = false}) {
+    if (applyTransform) {
+      return _buildWithTransform();
+    }
+    return _test;
+  }
+
+  /// Helper method to apply transformation to a value
+  /// Returns the transformed value or the original if no transformation is defined
+  dynamic applyTransformation(dynamic value) {
+    if (transformationFunction != null && value != null) {
+      return transformationFunction!(value as T);
+    }
+    if (value == null && defaultValue != null) {
+      return defaultValue;
+    }
+    return value;
+  }
+
+  /// Check if this validator has a transformation function
+  bool get hasTransformation => transformationFunction != null;
 }
