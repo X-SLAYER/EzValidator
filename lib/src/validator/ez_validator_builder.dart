@@ -77,26 +77,6 @@ class EzValidator<T> extends SchemaValue {
     }
   }
 
-  /// Validates and returns the transformed value
-  /// Returns the transformed value if validation succeeds, otherwise throws with error message
-  T? validateAndTransform(T? value, [Map<dynamic, dynamic>? entireData]) {
-    final error = _test(value, entireData);
-    if (error != null) {
-      throw Exception(error);
-    }
-
-    // Apply transformation
-    if (transformationFunction != null && value != null) {
-      value = transformationFunction!(value);
-    }
-
-    if (value == null && defaultValue != null) {
-      return defaultValue;
-    }
-
-    return value;
-  }
-
   /// Builds a function that validates and returns transformed value or error
   /// Returns transformed value on success, error string on failure
   dynamic Function(T?, [Map<dynamic, dynamic>?]) _buildWithTransform() {
