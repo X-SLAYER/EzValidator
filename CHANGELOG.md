@@ -1,3 +1,7 @@
+## 0.3.7
+
+- Add `Ez` alis for `EzValidator`
+- 
 ## 0.3.6
 
 - Add `union`: Used for composing "OR" types by combining multiple validators into a union.
