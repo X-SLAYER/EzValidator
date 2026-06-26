@@ -12,6 +12,10 @@ void main() {
       EzValidator<String>().required().positive(),
     );
 
+    final emailList = EzValidator().arrayOf<dynamic>(
+      EzValidator<String>().required().email(),
+    );
+
     test('Valid array should pass validation', () {
       var result = validator.validate([1, 2, 3, 4, 5]);
       expect(result, isNull);
@@ -40,6 +44,16 @@ void main() {
     test('Array with non-numeric values should fail validation', () {
       var result = validator.validate([1, 'two', 3, 4.5]);
       expect(result, isNotNull);
+    });
+
+    test('Email list should pass validation', () {
+      var result = emailList.validate(['test@email.com', 'email1@email.com']);
+      expect(result, isNull);
+    });
+
+    test('Email list should not pass validation', () {
+      var result = emailList.validate(['test@email.com', 'xxx']);
+      expect(result, isNotEmpty);
     });
   });
 }

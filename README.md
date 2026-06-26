@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="#"><img src="https://raw.githubusercontent.com/X-SLAYER/EzValidator/master/ez_validator_logo.png" height=250 /></a>
+  <a href="#"><img src="https://raw.githubusercontent.com/X-SLAYER/EzValidator/master/ez_validator_logo.png" height=150 /></a>
 </p>
 
 # Ez Validator
