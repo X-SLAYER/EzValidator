@@ -3,23 +3,34 @@ import 'package:test/test.dart';
 
 void main() {
   final EzSchema employeeSchema = EzSchema.shape({
-    "name": EzValidator<String>().required(),
-    "role": EzValidator<String>().required(),
+    "name": Ez<String>().required(),
+    "role": Ez<String>().required(),
   });
 
   final EzSchema departmentSchema = EzSchema.shape({
-    "departmentName": EzValidator<String>().required(),
-    "employees": EzValidator<List<Map<String, dynamic>>>()
+    "departmentName": Ez<String>().required(),
+    "employees": Ez<List<Map<String, dynamic>>>()
         .required()
         .arrayOf<Map<String, dynamic>>(
-          EzValidator().schema<Map<String, dynamic>>(employeeSchema),
+          Ez().schema<Map<String, dynamic>>(employeeSchema),
         ),
   });
   final EzSchema complexSchema = EzSchema.shape({
-    "departments": EzValidator<List<Map<String, dynamic>>>()
+    "departments": Ez<List<Map<String, dynamic>>>()
         .required()
         .arrayOf<Map<String, dynamic>>(
-            EzValidator().schema<Map<String, dynamic>>(departmentSchema)),
+            Ez().schema<Map<String, dynamic>>(departmentSchema)),
+  });
+
+  final addContactSchema = EzSchema.shape({
+    'email': Ez<String>().required().email(),
+    'additional_emails': Ez(optional: true, defaultValue: []).schema(
+      EzSchema.shape({
+        'email': Ez<String>().required().email(),
+        'is_primary': Ez<bool>(optional: true, defaultValue: false),
+        'label': Ez<dynamic>(optional: true),
+      }),
+    ),
   });
   test('Valid employee data passes validation', () {
     final employeeData = {
@@ -97,5 +108,31 @@ void main() {
 
     final errors = complexSchema.catchErrors(complexData);
     expect(errors, isNotEmpty, reason: 'Complex schema data should be invalid');
+  });
+
+  test('Valid contact schema data passes validation', () {
+    final contactSchema = {
+      "email": "bV1kM@example.com",
+      "additional_emails": [],
+    };
+    final errors = addContactSchema.catchErrors(contactSchema);
+    expect(errors, isEmpty, reason: 'Contact schema data should be valid');
+  });
+
+  test('Valid contact schema data should fail validation', () {
+    final contactSchema = {
+      "email": "bV1kM@example.com",
+      "additional_emails": [
+        {
+          "is_primary": true,
+          "email": "bV1kM@example.com",
+        },
+        {
+          "is_primary": true,
+        },
+      ],
+    };
+    final errors = addContactSchema.catchErrors(contactSchema);
+    expect(errors, isNotEmpty, reason: 'addional_emails email is required');
   });
 }

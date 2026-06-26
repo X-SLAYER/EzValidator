@@ -34,10 +34,15 @@ extension SchemaValidation<T> on EzValidator<T> {
 
   EzValidator<T> schema<T>(EzSchema schema) =>
       EzValidator<T>().addValidation((value, [entireData]) {
-        if (value is List<Map<String, dynamic>>) {
+        if (value is List) {
+          if (value.isEmpty) return null;
+
           List<Map<dynamic, dynamic>> errorsList = [];
 
           for (var item in value) {
+            if (item is! Map<String, dynamic>) {
+              return 'Invalid type for schema validation';
+            }
             var errors = schema.catchErrors(item);
             if (errors.isNotEmpty) {
               errorsList.add(errors);
