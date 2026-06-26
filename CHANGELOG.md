@@ -1,4 +1,4 @@
-## 0.3.7
+## 1.0.0
 
 - Improve list item type validation
 
