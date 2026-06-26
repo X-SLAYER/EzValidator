@@ -1,5 +1,9 @@
 ## 0.3.7
 
+- Improve list item type validation
+
+## 0.3.7
+
 - Add `Ez` alis for `EzValidator`
 - Added `applyTransform` to EzSchema
   
