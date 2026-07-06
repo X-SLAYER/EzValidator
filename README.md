@@ -367,11 +367,11 @@ final EzSchema schema = EzSchema.shape({
   // Use .when to validate confirmPassword based on the password field
   "password": EzValidator<String>()
       .minLength(8, "Password must be at least 8 characters long."),
-  "confirmPassword": EzValidator<String>().when(
-    "password",
-    (confirmValue, [ref]) =>
-        confirmValue == ref?["password"] ? null : "Passwords do not match",
-  )
+  'confirmPassword': EzValidator<String>().when(
+    (confirmValue, [ref]) => confirmValue == ref?['password']
+        ? null
+        : 'Password does not match',
+  ),
 });
 
 var result = schema.validateSync({
