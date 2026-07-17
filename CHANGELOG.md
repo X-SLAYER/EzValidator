@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Export union type
+  
 ## 1.0.0
 
 - Improve list item type validation

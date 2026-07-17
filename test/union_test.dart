@@ -1,4 +1,3 @@
-import 'package:ez_validator/src/validator/types/union.dart';
 import 'package:test/test.dart';
 import 'package:ez_validator/ez_validator.dart';
 
